@@ -5,13 +5,15 @@ local Player = require("entities.player")
 local Position = require("components.position")
 local Map = require("services.map")
 local SceneManager = require("scenes.scene_manager")
+local HUD = require("services.hud")
 
 local GameScene = {}
 
 function GameScene.New()
 	return {
 		players = {},
-		currentLevel = 0
+		currentLevel = 0,
+		hud = HUD.New()
 	}
 end
 
@@ -42,6 +44,13 @@ function GameScene.LoadLevel(gs, level)
 	end
 
 	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")
+
+	-- Set level text if it exists
+	if LEVEL_TEXT[clampedLevel] then
+		HUD.SetText(gs.hud, LEVEL_TEXT[clampedLevel])
+	else
+		HUD.ClearText(gs.hud)
+	end
 end
 
 function GameScene.ChangeLevel(gs, level)
@@ -58,6 +67,8 @@ function GameScene.Update(gs)
 	for _, p in ipairs(gs.players) do
 		Player.Update(p, gs.currentLevel)
 	end
+
+	HUD.Update(gs.hud)
 
 	if Map.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
@@ -80,6 +91,9 @@ function GameScene.Draw(gs)
 	for _, p in ipairs(gs.players) do
 		Player.Draw(p)
 	end
+
+	-- Draw HUD
+	HUD.Draw(gs.hud)
 end
 
 return GameScene

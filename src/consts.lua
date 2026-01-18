@@ -1,4 +1,12 @@
 -- consts --
+
+LEVEL_TEXT = {
+	-- Example entries (uncomment and modify as needed):
+	[0] = "D-pad or arrows to move",
+	-- [1] = "Find all the tiles!",
+	-- [2] = "Final level!",
+}
+
 local BLACK = 0
 local PURPLE = 1
 local RED = 2
