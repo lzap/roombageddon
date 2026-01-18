@@ -70,6 +70,14 @@ function GameScene.Update(gs)
 
 	HUD.Update(gs.hud)
 
+	-- Reset level to starting position when B button is pressed
+	if btnp(BUTTONS.B) then
+		-- Restore original map state
+		Map.restoreOriginalMap(gs.currentLevel)
+		-- Reload level (which will reset player positions)
+		GameScene.LoadLevel(gs, gs.currentLevel)
+	end
+
 	if Map.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
 			local sm = G.SM

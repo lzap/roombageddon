@@ -3,6 +3,9 @@ require("consts")
 
 local Map = {}
 
+-- Cache to store original map states for each level
+local originalMapCache = {}
+
 -- Calculate map coordinates for a given level number (0-63)
 function Map.getCoords(level)
 	level = level % MAX_LEVELS
@@ -56,10 +59,55 @@ function Map.findPlayerPositions(level)
 	return positions
 end
 
+-- Store original map state for a level
+function Map.storeOriginalMap(level)
+	-- Clamp level to valid range
+	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+	
+	-- Only store if not already cached
+	if not originalMapCache[level] then
+		local mapX, mapY = Map.getCoords(level)
+		local tiles = {}
+		
+		-- Store all tiles in the level
+		for y = 0, MAP_HEIGHT - 1 do
+			for x = 0, MAP_WIDTH - 1 do
+				local spriteId = mget(mapX + x, mapY + y)
+				tiles[y * MAP_WIDTH + x] = spriteId
+			end
+		end
+		
+		originalMapCache[level] = tiles
+	end
+end
+
+-- Restore original map state for a level
+function Map.restoreOriginalMap(level)
+	-- Clamp level to valid range
+	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+	
+	-- Only restore if we have a cached state
+	if originalMapCache[level] then
+		local mapX, mapY = Map.getCoords(level)
+		local tiles = originalMapCache[level]
+		
+		-- Restore all tiles in the level
+		for y = 0, MAP_HEIGHT - 1 do
+			for x = 0, MAP_WIDTH - 1 do
+				local spriteId = tiles[y * MAP_WIDTH + x]
+				mset(mapX + x, mapY + y, spriteId)
+			end
+		end
+	end
+end
+
 -- Load a level: scan for player positions and return them
 function Map.loadLevel(level)
 	-- Clamp level to valid range
 	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+
+	-- Store original map state if not already stored
+	Map.storeOriginalMap(level)
 
 	-- Find player positions in the level
 	return Map.findPlayerPositions(level), level
