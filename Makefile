@@ -2,6 +2,7 @@
 
 LUACC := luacc
 TIC80 ?= $(shell which tic80 || echo /Applications/tic80.app/Contents/MacOS/tic80)
+ALONE := 0 # export without editors
 
 PLATFORM := html
 GAME_NAME := roombageddon
@@ -16,8 +17,7 @@ all: build
 build:
 	$(LUACC) -o game.lua -p 6 -i ./ -i ./$(SRC_DIR) main $(SOURCES)
 	mkdir -p $(BUILD_DIR)
-	# Clunky import since GHA does not contain PRO version
-	$(TIC80) --skip --fs=. --cli --cmd="new lua & import code game.lua & import tiles game.lua & import sprites game.lua & import map game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
+	$(TIC80) --skip --fs=. --cli --cmd="load game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=$(ALONE) & exit"
 
 fmt:
 	@stylua src/ main.lua
