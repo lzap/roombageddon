@@ -16,10 +16,11 @@ local L_GRAY = 13
 local GRAY = 14
 local D_GRAY = 15
 
-local UP = 0
-local DOWN = 1
-local LEFT = 2
-local RIGHT = 3
+UP = 0
+DOWN = 1
+LEFT = 2
+RIGHT = 3
+
 local A = 4 -- Z
 local B = 5 -- X
 local X = 6 -- A
@@ -74,6 +75,11 @@ DIRS = {
 		y = 0
 	}
 }
+
+ROTATE_NONE = 0
+ROTATE_90 = 1
+ROTATE_180 = 2
+ROTATE_270 = 3
 
 COLORS = {
 	BLACK = BLACK,

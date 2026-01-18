@@ -15,7 +15,7 @@ end
 function MapService.findPlayerPositions(level)
 	local mapX, mapY = MapService.getCoords(level)
 	local positions = {}
-	
+
 	-- Scan the entire level map for player position sprites
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
@@ -31,7 +31,7 @@ function MapService.findPlayerPositions(level)
 			end
 		end
 	end
-	
+
 	return positions
 end
 
@@ -39,7 +39,7 @@ end
 function MapService.loadLevel(level)
 	-- Clamp level to valid range
 	level = math.max(0, math.min(level, MAX_LEVELS - 1))
-	
+
 	-- Find player positions in the level
 	return MapService.findPlayerPositions(level), level
 end
@@ -50,16 +50,16 @@ function MapService.canMoveTo(level, gridX, gridY)
 	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
 		return false
 	end
-	
+
 	local mapX, mapY = MapService.getCoords(level)
 	local spriteId = mget(mapX + gridX, mapY + gridY)
-	
+
 	-- Check if sprite flag 0 (bit 0) is set (blocking movement)
 	-- Use fget to check sprite flags, not the sprite ID value
 	if fget(spriteId, 0) then
 		return false
 	end
-	
+
 	return true
 end
 
@@ -69,7 +69,7 @@ function MapService.markVisited(level, gridX, gridY, playerNumber)
 	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
 		return
 	end
-	
+
 	local mapX, mapY = MapService.getCoords(level)
 	-- Sprite 32 for P1, 33 for P2, 34 for P3, 35 for P4
 	local visitedSprite = 31 + playerNumber
@@ -79,7 +79,7 @@ end
 -- Check if level is complete (no tiles with bit 1 set)
 function MapService.isLevelComplete(level)
 	local mapX, mapY = MapService.getCoords(level)
-	
+
 	-- Scan all tiles in the level
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
@@ -91,7 +91,7 @@ function MapService.isLevelComplete(level)
 			end
 		end
 	end
-	
+
 	return true
 end
 

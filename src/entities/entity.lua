@@ -21,7 +21,8 @@ function Entity.New(opts)
 		frame = opts.frame or 1,
 		frameTime = opts.frameTime or 0,
 		curAnim = opts.curAnim or nil,
-		anim = opts.anim or {}
+		anim = opts.anim or {},
+		rotate = opts.rotate or 0
 	}
 end
 
@@ -29,7 +30,7 @@ function Entity.Update(e)
 	if e.curAnim == nil or e.anim[e.curAnim] == nil then
 		return
 	end
-	
+
 	e.frameTime = e.frameTime + 1
 	if e.frameTime >= e.anim[e.curAnim].speed then
 		e.frame = e.frame + 1
@@ -44,9 +45,10 @@ function Entity.Draw(e)
 	if e.curAnim == nil or e.anim[e.curAnim] == nil then
 		return
 	end
-	
+
 	local sprite = e.anim[e.curAnim].frames[e.frame]
-	spr(sprite, e.position.x, e.position.y, e.keyColor)
+	local rotate = e.rotate or 0
+	spr(sprite, e.position.x, e.position.y, e.keyColor, 1, 0, rotate)
 end
 
 return Entity

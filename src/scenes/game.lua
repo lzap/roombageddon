@@ -18,10 +18,10 @@ end
 function GameScene.LoadLevel(gs, level)
 	local playerPositions, clampedLevel = MapService.loadLevel(level)
 	gs.currentLevel = clampedLevel
-	
+
 	-- Clear existing players
 	gs.players = {}
-	
+
 	-- Create players at found positions
 	for _, posData in ipairs(playerPositions) do
 		local player = Player.New {
@@ -33,13 +33,13 @@ function GameScene.LoadLevel(gs, level)
 			currentLevel = clampedLevel
 		}
 		table.insert(gs.players, player)
-		
+
 		-- Mark starting position as visited
 		local startGridX = math.floor(posData.x / TILE_SIZE)
 		local startGridY = math.floor(posData.y / TILE_SIZE)
 		MapService.markVisited(clampedLevel, startGridX, startGridY, posData.playerNumber)
 	end
-	
+
 	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")
 end
 
@@ -58,11 +58,11 @@ function GameScene.Update(gs)
 	for _, p in ipairs(gs.players) do
 		Player.Update(p, gs.currentLevel)
 	end
-	
+
 	-- Check for level completion
 	if MapService.isLevelComplete(gs.currentLevel) then
 		trace("Level " .. gs.currentLevel .. " complete!")
-		
+
 		-- Check if this is the last level
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
 			-- Switch to game over scene
@@ -77,11 +77,11 @@ end
 
 function GameScene.Draw(gs)
 	cls(0)
-	
+
 	-- Draw Map
 	local mx, my = MapService.getCoords(gs.currentLevel)
 	map(mx, my, MAP_WIDTH, MAP_HEIGHT, 0, 0)
-	
+
 	-- Draw Entities
 	for _, p in ipairs(gs.players) do
 		Player.Draw(p)
