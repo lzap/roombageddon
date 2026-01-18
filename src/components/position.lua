@@ -18,7 +18,7 @@ local positionMetatable = {
 			return Position.New { x = a.x + (b.x or 0), y = a.y + (b.y or 0) }
 		end
 	end,
-	
+
 	-- Subtraction: Position - Position
 	__sub = function(a, b)
 		if type(b) == "number" then
@@ -29,7 +29,7 @@ local positionMetatable = {
 			return Position.New { x = a.x - (b.x or 0), y = a.y - (b.y or 0) }
 		end
 	end,
-	
+
 	-- Multiplication: Position * scalar or scalar * Position
 	__mul = function(a, b)
 		if type(a) == "number" then
@@ -43,7 +43,7 @@ local positionMetatable = {
 			return Position.New { x = a.x * (b.x or 0), y = a.y * (b.y or 0) }
 		end
 	end,
-	
+
 	-- Division: Position / scalar
 	__div = function(a, b)
 		if type(b) == "number" then
@@ -53,12 +53,12 @@ local positionMetatable = {
 			return Position.New { x = a.x / (b.x or 1), y = a.y / (b.y or 1) }
 		end
 	end,
-	
+
 	-- Unary minus: -Position
 	__unm = function(a)
 		return Position.New { x = -a.x, y = -a.y }
 	end,
-	
+
 	-- Equality: Position == Position
 	__eq = function(a, b)
 		return a.x == b.x and a.y == b.y

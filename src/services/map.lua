@@ -27,7 +27,7 @@ function Map.findPlayerPositions(level)
 			local spriteId = mget(mapX + x, mapY + y)
 			local playerNum = nil
 			local direction = nil
-			
+
 			-- Check UP sprites (64-67)
 			if spriteId >= PLAYER_SPRITE_UP and spriteId <= PLAYER_SPRITE_UP + 3 then
 				playerNum = spriteId - PLAYER_SPRITE_UP + 1
@@ -45,7 +45,7 @@ function Map.findPlayerPositions(level)
 				playerNum = spriteId - PLAYER_SPRITE_RIGHT + 1
 				direction = RIGHT
 			end
-			
+
 			if playerNum then
 				table.insert(positions, {
 					playerNumber = playerNum,
@@ -64,12 +64,12 @@ end
 function Map.storeOriginalMap(level)
 	-- Clamp level to valid range
 	level = math.max(0, math.min(level, MAX_LEVELS - 1))
-	
+
 	-- Only store if not already cached
 	if not originalMapCache[level] then
 		local mapX, mapY = Map.getCoords(level)
 		local tiles = {}
-		
+
 		-- Store all tiles in the level
 		for y = 0, MAP_HEIGHT - 1 do
 			for x = 0, MAP_WIDTH - 1 do
@@ -77,7 +77,7 @@ function Map.storeOriginalMap(level)
 				tiles[y * MAP_WIDTH + x] = spriteId
 			end
 		end
-		
+
 		originalMapCache[level] = tiles
 	end
 end
@@ -86,12 +86,12 @@ end
 function Map.restoreOriginalMap(level)
 	-- Clamp level to valid range
 	level = math.max(0, math.min(level, MAX_LEVELS - 1))
-	
+
 	-- Only restore if we have a cached state
 	if originalMapCache[level] then
 		local mapX, mapY = Map.getCoords(level)
 		local tiles = originalMapCache[level]
-		
+
 		-- Restore all tiles in the level
 		for y = 0, MAP_HEIGHT - 1 do
 			for x = 0, MAP_WIDTH - 1 do

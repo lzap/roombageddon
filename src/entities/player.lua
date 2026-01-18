@@ -73,7 +73,7 @@ function Player.Update(p, currentLevel)
 
 	-- Calculate grid position at the end of the queue (where player will be after all queued moves)
 	local endGridPos = gridPos
-	
+
 	-- If there are queued positions, use the last one in the queue
 	if #p.posQueue > 0 then
 		endGridPos = Position.Floor(p.posQueue[#p.posQueue], TILE_SIZE)
@@ -118,28 +118,28 @@ function Player.Update(p, currentLevel)
 	if #p.posQueue > 0 then
 		local currentTarget = p.posQueue[1]
 		p.moveTimer = p.moveTimer + 1
-		
+
 		if p.moveTimer >= MOVE_SPEED then
 			p.moveTimer = 0
-			
+
 			-- Calculate direction to target
 			local diff = currentTarget - p.entity.position
-			
+
 			-- Calculate normalized step (1 pixel in the direction of target)
 			local step = Position.New {
 				x = diff.x ~= 0 and (diff.x > 0 and 1 or -1) or 0,
 				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0
 			}
-			
+
 			-- Move one pixel towards target
 			p.entity.position = p.entity.position + step
-			
+
 			-- Check if we've reached the target
 			if p.entity.position == currentTarget then
 				-- Mark this position as visited
 				local targetGridPos = Position.Floor(currentTarget, TILE_SIZE)
 				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, p.playerNumber)
-				
+
 				-- Remove completed target from queue
 				table.remove(p.posQueue, 1)
 			end
@@ -160,7 +160,7 @@ function Player.IsStuck(p, currentLevel)
 	for direction = UP, RIGHT do
 		local dirData = DIRS[direction]
 		local targetGridPos = gridPos + dirData
-		
+
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			return false -- Can move in at least one direction
 		end
