@@ -3,7 +3,7 @@ require("consts")
 
 local Player = require("entities.player")
 local Position = require("components.position")
-local MapService = require("services.map_service")
+local Map = require("services.map")
 local SceneManager = require("scenes.scene_manager")
 
 local GameScene = {}
@@ -16,7 +16,7 @@ function GameScene.New()
 end
 
 function GameScene.LoadLevel(gs, level)
-	local playerPositions, clampedLevel = MapService.loadLevel(level)
+	local playerPositions, clampedLevel = Map.loadLevel(level)
 	gs.currentLevel = clampedLevel
 
 	-- Clear existing players
@@ -38,7 +38,7 @@ function GameScene.LoadLevel(gs, level)
 		-- Mark starting position as visited
 		local startGridX = math.floor(posData.x / TILE_SIZE)
 		local startGridY = math.floor(posData.y / TILE_SIZE)
-		MapService.markVisited(clampedLevel, startGridX, startGridY, posData.playerNumber)
+		Map.markVisited(clampedLevel, startGridX, startGridY, posData.playerNumber)
 	end
 
 	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")
@@ -59,7 +59,7 @@ function GameScene.Update(gs)
 		Player.Update(p, gs.currentLevel)
 	end
 
-	if MapService.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
+	if Map.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
 			local sm = G.SM
 			SceneManager.Switch(sm, "game_over")
@@ -73,7 +73,7 @@ function GameScene.Draw(gs)
 	cls(0)
 
 	-- Draw Map
-	local mx, my = MapService.getCoords(gs.currentLevel)
+	local mx, my = Map.getCoords(gs.currentLevel)
 	map(mx, my, MAP_WIDTH, MAP_HEIGHT, 0, 0)
 
 	-- Draw Entities

@@ -3,7 +3,7 @@ require("consts")
 
 local Entity = require("entities.entity")
 local Position = require("components.position")
-local MapService = require("services.map_service")
+local Map = require("services.map")
 
 local Player = {}
 
@@ -99,7 +99,7 @@ function Player.Update(p, currentLevel)
 		local targetGridY = gridY + dirData.y
 
 		-- Check if movement is allowed (not blocked by bit 0)
-		if MapService.canMoveTo(currentLevel, targetGridX, targetGridY) then
+		if Map.canMoveTo(currentLevel, targetGridX, targetGridY) then
 			-- Add target position to queue
 			table.insert(p.positionQueue, {
 				x = targetGridX * TILE_SIZE,
@@ -138,7 +138,7 @@ function Player.Update(p, currentLevel)
 				-- Mark this position as visited
 				local targetGridX = math.floor(p.currentTarget.x / TILE_SIZE)
 				local targetGridY = math.floor(p.currentTarget.y / TILE_SIZE)
-				MapService.markVisited(currentLevel, targetGridX, targetGridY, p.playerNumber)
+				Map.markVisited(currentLevel, targetGridX, targetGridY, p.playerNumber)
 				
 				-- Get next target from queue
 				if #p.positionQueue > 0 then
