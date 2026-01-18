@@ -9,20 +9,20 @@ local Entity = {}
 function Entity.New(opts)
 	opts = opts or {}
 	return {
-		size = opts.size or Size.New {
+		size = opts.size or Size.New({
 			width = TILE_SIZE,
-			height = TILE_SIZE
-		},
-		position = opts.position or Position.New {
+			height = TILE_SIZE,
+		}),
+		position = opts.position or Position.New({
 			x = 0,
-			y = 0
-		},
+			y = 0,
+		}),
 		keyColor = opts.keyColor or 0,
 		frame = opts.frame or 1,
 		frameTime = opts.frameTime or 0,
 		curAnim = opts.curAnim or nil,
 		anim = opts.anim or {},
-		rotate = opts.rotate or 0
+		rotate = opts.rotate or 0,
 	}
 end
 

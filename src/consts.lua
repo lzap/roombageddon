@@ -69,30 +69,30 @@ BUTTONS = {
 	RIGHT = RIGHT,
 	UP = UP,
 	DOWN = DOWN,
-	NONE = NONE
+	NONE = NONE,
 }
 
 DIRS = {
 	[UP] = {
 		x = 0,
-		y = -1
+		y = -1,
 	},
 	[DOWN] = {
 		x = 0,
-		y = 1
+		y = 1,
 	},
 	[LEFT] = {
 		x = -1,
-		y = 0
+		y = 0,
 	},
 	[RIGHT] = {
 		x = 1,
-		y = 0
+		y = 0,
 	},
 	[NONE] = {
 		x = 0,
-		y = 0
-	}
+		y = 0,
+	},
 }
 
 ROTATE_NONE = 0
@@ -116,5 +116,5 @@ COLORS = {
 	WHITE = WHITE,
 	L_GRAY = L_GRAY,
 	GRAY = GRAY,
-	D_GRAY = D_GRAY
+	D_GRAY = D_GRAY,
 }

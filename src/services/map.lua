@@ -51,7 +51,7 @@ function Map.findPlayerPositions(level)
 					playerNumber = playerNum,
 					direction = direction,
 					x = x * TILE_SIZE,
-					y = y * TILE_SIZE
+					y = y * TILE_SIZE,
 				})
 			end
 		end

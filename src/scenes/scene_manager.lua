@@ -6,7 +6,7 @@ function SceneManager.New()
 	return {
 		scenes = {},
 		handlers = {},
-		current = nil
+		current = nil,
 	}
 end
 

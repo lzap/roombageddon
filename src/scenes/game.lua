@@ -13,7 +13,7 @@ function GameScene.New()
 	return {
 		players = {},
 		currentLevel = 0,
-		hud = HUD.New()
+		hud = HUD.New(),
 	}
 end
 
@@ -26,19 +26,19 @@ function GameScene.LoadLevel(gs, level)
 
 	-- Create players at found positions
 	for _, posData in ipairs(playerPositions) do
-		local player = Player.New {
+		local player = Player.New({
 			playerNumber = posData.playerNumber,
-			position = Position.New {
+			position = Position.New({
 				x = posData.x,
-				y = posData.y
-			},
+				y = posData.y,
+			}),
 			direction = posData.direction,
-			currentLevel = clampedLevel
-		}
+			currentLevel = clampedLevel,
+		})
 		table.insert(gs.players, player)
 
 		-- Mark starting position as visited
-		local startPos = Position.New { x = posData.x, y = posData.y }
+		local startPos = Position.New({ x = posData.x, y = posData.y })
 		local startGridPos = Position.Floor(startPos, TILE_SIZE)
 		Map.markVisited(clampedLevel, startGridPos.x, startGridPos.y, posData.playerNumber)
 	end

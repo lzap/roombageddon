@@ -12,7 +12,7 @@ local GameOverScene = require("scenes.game_over")
 --local Tools = require("tools")
 
 G = {
-	SM = {}
+	SM = {},
 }
 
 function BOOT()
@@ -26,16 +26,16 @@ function BOOT()
 	G.SM = SceneManager.New()
 	SceneManager.Add(G.SM, "intro", intro, {
 		update = IntroScene.Update,
-		draw = IntroScene.Draw
+		draw = IntroScene.Draw,
 	})
 	SceneManager.Add(G.SM, "game", game, {
 		onEnter = GameScene.OnEnter,
 		update = GameScene.Update,
-		draw = GameScene.Draw
+		draw = GameScene.Draw,
 	})
 	SceneManager.Add(G.SM, "game_over", gameOver, {
 		update = GameOverScene.Update,
-		draw = GameOverScene.Draw
+		draw = GameOverScene.Draw,
 	})
 	SceneManager.Switch(G.SM, "intro")
 end
@@ -114,4 +114,3 @@ end
 -- <PALETTE>
 -- 000:1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57
 -- </PALETTE>
-

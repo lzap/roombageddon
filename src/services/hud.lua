@@ -7,7 +7,7 @@ function HUD.New()
 	return {
 		text = nil,
 		blink = false,
-		blinkTimer = 0
+		blinkTimer = 0,
 	}
 end
 

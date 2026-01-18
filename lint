@@ -1,0 +1,22 @@
+#!/bin/bash
+
+SEARCH_PATHS=(
+    "$(which lua-language-server 2>/dev/null)"
+    "$(find ~/.cursor/extensions -name "lua-language-server" -type f 2>/dev/null | head -n 1)"
+    "$(find ~/.vscode/extensions -name "lua-language-server" -type f 2>/dev/null | head -n 1)"
+)
+
+LUA_BIN=""
+for path in "${SEARCH_PATHS[@]}"; do
+    if [ -n "$path" ] && [ -f "$path" ]; then
+        LUA_BIN="$path"
+        break
+    fi
+done
+
+if [ -z "$LUA_BIN" ]; then
+    echo -e "\033[0;31mError\033[0m: lua-language-server binary not found."
+    exit 1
+fi
+
+$LUA_BIN --check="$WORKSPACE"

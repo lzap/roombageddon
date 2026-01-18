@@ -28,10 +28,11 @@ function Player.New(opts)
 	local initialDirection = opts.direction or RIGHT -- Default to RIGHT
 
 	-- Set default position if not provided
-	local pos = opts.position or Position.New {
-		x = SCREEN_WIDTH / 2 - TILE_SIZE,
-		y = SCREEN_HEIGHT / 2 - TILE_SIZE
-	}
+	local pos = opts.position
+		or Position.New({
+			x = SCREEN_WIDTH / 2 - TILE_SIZE,
+			y = SCREEN_HEIGHT / 2 - TILE_SIZE,
+		})
 
 	-- Use configurable sprites, default to {256, 257}
 	local sprites = opts.sprites or { 256, 257 }
@@ -40,20 +41,20 @@ function Player.New(opts)
 	local initialRotation = directionToRotation(initialDirection)
 
 	-- Create entity with player-specific animation
-	local ent = Entity.New {
+	local ent = Entity.New({
 		position = pos,
 		anim = {
 			idle = {
 				frames = sprites,
-				speed = 10
-			}
+				speed = 10,
+			},
 		},
 		curAnim = "idle",
 		frame = 1,
 		frameTime = 0,
 		keyColor = opts.keyColor or 0,
-		rotate = initialRotation
-	}
+		rotate = initialRotation,
+	})
 
 	return {
 		entity = ent,
@@ -61,7 +62,7 @@ function Player.New(opts)
 		currentLevel = opts.currentLevel or 0,
 		lastDirection = initialDirection,
 		posQueue = {}, -- FIFO queue of target positions
-		moveTimer = 0 -- Frames counter for pixel movement
+		moveTimer = 0, -- Frames counter for pixel movement
 	}
 end
 
@@ -126,10 +127,10 @@ function Player.Update(p, currentLevel)
 			local diff = currentTarget - p.entity.position
 
 			-- Calculate normalized step (1 pixel in the direction of target)
-			local step = Position.New {
+			local step = Position.New({
 				x = diff.x ~= 0 and (diff.x > 0 and 1 or -1) or 0,
-				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0
-			}
+				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0,
+			})
 
 			-- Move one pixel towards target
 			p.entity.position = p.entity.position + step

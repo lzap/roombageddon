@@ -11,7 +11,16 @@ function IntroScene.New()
 end
 
 function IntroScene.Update(is)
-	if btnp(BUTTONS.A) or btnp(BUTTONS.B) or btnp(BUTTONS.X) or btnp(BUTTONS.Y) or btnp(BUTTONS.LEFT) or btnp(BUTTONS.RIGHT) or btnp(BUTTONS.UP) or btnp(BUTTONS.DOWN) then
+	if
+		btnp(BUTTONS.A)
+		or btnp(BUTTONS.B)
+		or btnp(BUTTONS.X)
+		or btnp(BUTTONS.Y)
+		or btnp(BUTTONS.LEFT)
+		or btnp(BUTTONS.RIGHT)
+		or btnp(BUTTONS.UP)
+		or btnp(BUTTONS.DOWN)
+	then
 		local sm = G.SM
 		SceneManager.Switch(sm, "game")
 	end

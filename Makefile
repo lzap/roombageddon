@@ -1,10 +1,10 @@
-.PHONY: all build run
+.PHONY: all build lint fmt run
 
 LUACC := luacc
 TIC80 := /Applications/tic80.app/Contents/MacOS/tic80
 
 PLATFORM := linux
-GAME_NAME := mygame
+GAME_NAME := roombageddon
 
 BUILD_DIR := build
 SRC_DIR := src
@@ -18,9 +18,11 @@ build:
 	mkdir -p $(BUILD_DIR)
 	$(TIC80) --skip --fs=. --cli --cmd="load game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
 
+fmt:
+	@stylua src/ main.lua
+
+lint:
+	@./lint
+
 run:
 	$(TIC80) --scale=5 --skip --fs=. --cmd="load main.lua & run"
-
-.PHONY: lint
-lint:
-	~/.cursor/extensions/sumneko.lua-3.16.4-darwin-arm64/server/bin/lua-language-server --check=.
