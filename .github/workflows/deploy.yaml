@@ -1,0 +1,69 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.3 liblua5.3-dev xvfb libsdl2-dev luarocks unzip
+          sudo luarocks install luacc
+
+      - name: Setup TIC-80 CLI
+        run: |
+          wget https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-linux.tar.gz
+          tar -xvf tic80-linux.tar.gz
+          sudo mv tic80 /usr/local/bin/tic80
+
+      - name: Build and Export Game
+        run: |
+          mkdir -p build
+          # xvfb-run provides the virtual display TIC-80 needs to export
+          xvfb-run --auto-servernum make build TIC80=tic80
+
+      - name: Extract ZIP for GitHub Pages
+        run: |
+          # 1. The export command creates build/roombageddon.zip
+          # 2. We unzip it into a clean directory 'dist'
+          mkdir -p dist
+          unzip build/roombageddon.zip -d dist/
+          
+          # 3. Check if TIC-80 nested it (sometimes it creates a subfolder inside the zip)
+          # If it did, move contents to the root of 'dist'
+          if [ -d dist/roombageddon ]; then
+            mv dist/roombageddon/* dist/
+            rm -rf dist/roombageddon
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # We now point to the unzipped 'dist' folder
+          path: './dist'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
