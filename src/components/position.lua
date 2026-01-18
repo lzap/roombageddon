@@ -26,4 +26,12 @@ function Position.MoveTo(pos, dir, stepSize)
 	pos.y = pos.y + dir.y * stepSize
 end
 
+function Position.Floor(pos, divisor)
+	divisor = divisor or 1
+	return Position.New {
+		x = math.floor(pos.x / divisor),
+		y = math.floor(pos.y / divisor)
+	}
+end
+
 return Position

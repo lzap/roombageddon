@@ -60,8 +60,7 @@ function Player.New(opts)
 		playerNumber = playerNumber,
 		currentLevel = opts.currentLevel or 0,
 		lastDirection = initialDirection,
-		positionQueue = {}, -- FIFO queue of target positions
-		currentTarget = nil, -- Current target position we're moving towards
+		posQueue = {}, -- FIFO queue of target positions
 		moveTimer = 0 -- Frames counter for pixel movement
 	}
 end
@@ -70,8 +69,15 @@ function Player.Update(p, currentLevel)
 	Entity.Update(p.entity)
 
 	-- Get current grid position
-	local gridX = math.floor(p.entity.position.x / TILE_SIZE)
-	local gridY = math.floor(p.entity.position.y / TILE_SIZE)
+	local gridPos = Position.Floor(p.entity.position, TILE_SIZE)
+
+	-- Calculate grid position at the end of the queue (where player will be after all queued moves)
+	local endGridPos = gridPos
+	
+	-- If there are queued positions, use the last one in the queue
+	if #p.posQueue > 0 then
+		endGridPos = Position.Floor(p.posQueue[#p.posQueue], TILE_SIZE)
+	end
 
 	-- Handle input: add target positions to queue
 	local dirData = nil
@@ -95,35 +101,36 @@ function Player.Update(p, currentLevel)
 
 	-- If input detected, add target position to queue
 	if dirData then
-		local targetGridX = gridX + dirData.x
-		local targetGridY = gridY + dirData.y
+		local targetGridPos = Position.New {
+			x = endGridPos.x + dirData.x,
+			y = endGridPos.y + dirData.y
+		}
 
 		-- Check if movement is allowed (not blocked by bit 0)
-		if Map.canMoveTo(currentLevel, targetGridX, targetGridY) then
+		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			-- Add target position to queue
-			table.insert(p.positionQueue, {
-				x = targetGridX * TILE_SIZE,
-				y = targetGridY * TILE_SIZE
+			table.insert(p.posQueue, Position.New {
+				x = targetGridPos.x * TILE_SIZE,
+				y = targetGridPos.y * TILE_SIZE
 			})
+			-- Initialize move timer when starting to move
+			if #p.posQueue == 1 then
+				p.moveTimer = 0
+			end
 		end
 	end
 
-	-- If no current target but queue has items, set next target
-	if p.currentTarget == nil and #p.positionQueue > 0 then
-		p.currentTarget = table.remove(p.positionQueue, 1)
-		p.moveTimer = 0
-	end
-
-	-- Move pixel by pixel towards current target
-	if p.currentTarget then
+	-- Move pixel by pixel towards first target in queue
+	if #p.posQueue > 0 then
+		local currentTarget = p.posQueue[1]
 		p.moveTimer = p.moveTimer + 1
 		
 		if p.moveTimer >= MOVE_SPEED then
 			p.moveTimer = 0
 			
 			-- Calculate direction to target
-			local dx = p.currentTarget.x - p.entity.position.x
-			local dy = p.currentTarget.y - p.entity.position.y
+			local dx = currentTarget.x - p.entity.position.x
+			local dy = currentTarget.y - p.entity.position.y
 			
 			-- Move one pixel towards target
 			if dx ~= 0 then
@@ -134,18 +141,13 @@ function Player.Update(p, currentLevel)
 			end
 			
 			-- Check if we've reached the target
-			if p.entity.position.x == p.currentTarget.x and p.entity.position.y == p.currentTarget.y then
+			if p.entity.position.x == currentTarget.x and p.entity.position.y == currentTarget.y then
 				-- Mark this position as visited
-				local targetGridX = math.floor(p.currentTarget.x / TILE_SIZE)
-				local targetGridY = math.floor(p.currentTarget.y / TILE_SIZE)
-				Map.markVisited(currentLevel, targetGridX, targetGridY, p.playerNumber)
+				local targetGridPos = Position.Floor(currentTarget, TILE_SIZE)
+				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, p.playerNumber)
 				
-				-- Get next target from queue
-				if #p.positionQueue > 0 then
-					p.currentTarget = table.remove(p.positionQueue, 1)
-				else
-					p.currentTarget = nil
-				end
+				-- Remove completed target from queue
+				table.remove(p.posQueue, 1)
 			end
 		end
 	end
@@ -153,19 +155,18 @@ end
 
 function Player.IsStuck(p, currentLevel)
 	-- Player is stuck if they're not moving and can't move in any direction
-	if p.currentTarget ~= nil or #p.positionQueue > 0 then
+	if #p.posQueue > 0 then
 		return false -- Player is currently moving
 	end
 
 	-- Get current grid position
-	local gridX = math.floor(p.entity.position.x / TILE_SIZE)
-	local gridY = math.floor(p.entity.position.y / TILE_SIZE)
+	local gridPos = Position.Floor(p.entity.position, TILE_SIZE)
 
 	-- Check if player can move in any direction
 	for direction = UP, RIGHT do
 		local dirData = DIRS[direction]
-		local targetGridX = gridX + dirData.x
-		local targetGridY = gridY + dirData.y
+		local targetGridX = gridPos.x + dirData.x
+		local targetGridY = gridPos.y + dirData.y
 		
 		if Map.canMoveTo(currentLevel, targetGridX, targetGridY) then
 			return false -- Can move in at least one direction
