@@ -102,6 +102,22 @@ function Map.restoreOriginalMap(level)
 	end
 end
 
+-- Replace center markers (tiles with bit 2 set) with sprite 0
+function Map.replaceCenterMarkers(level)
+	local mapX, mapY = Map.getCoords(level)
+
+	-- Scan all tiles in the level
+	for y = 0, MAP_HEIGHT - 1 do
+		for x = 0, MAP_WIDTH - 1 do
+			local spriteId = mget(mapX + x, mapY + y)
+			-- Check if sprite flag 2 (bit 2) is set
+			if fget(spriteId, 2) then
+				-- Replace with sprite 0
+				mset(mapX + x, mapY + y, 0)
+			end
+		end
+	end
+end
 -- Load a level: scan for player positions and return them
 function Map.loadLevel(level)
 	-- Clamp level to valid range
@@ -110,6 +126,8 @@ function Map.loadLevel(level)
 	-- Store original map state if not already stored
 	Map.storeOriginalMap(level)
 
+	-- Replace center markers (tiles with bit 2 set) with sprite 0
+	Map.replaceCenterMarkers(level)
 	-- Find player positions in the level
 	return Map.findPlayerPositions(level), level
 end
