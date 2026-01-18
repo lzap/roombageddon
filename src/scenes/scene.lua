@@ -1,8 +1,10 @@
 -- scene --
 local Object = require("object")
 
+---@class Scene : Object
 local Scene = Object:extend("Scene")
 
+---@param table? table
 function Scene:__init(table)
 end
 

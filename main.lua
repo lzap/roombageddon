@@ -9,15 +9,22 @@ local SceneManager = require("scenes.scene_manager")
 local IntroScene = require("scenes.intro")
 local GameScene = require("scenes.game")
 
--- Global Game Table
+---@class GameGlobal
+---@field SM SceneManager|{}
+
+---@type GameGlobal
 G = {
+	---@type SceneManager|{}
 	SM = {}
 }
 
 function BOOT()
+	---@type IntroScene
 	local intro = IntroScene:new {}
+	---@type GameScene
 	local game = GameScene:new {}
 
+	---@type SceneManager
 	G.SM = SceneManager:new {}
 	G.SM:add("intro", intro)
 	G.SM:add("game", game)

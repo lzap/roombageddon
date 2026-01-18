@@ -11,14 +11,15 @@ function IntroScene:__init(table)
 end
 
 function IntroScene:update()
-	if btnp(BUTTONS.A) then
-		G.SM:switch("game")
+	if btnp(BUTTONS.A) or btnp(BUTTONS.B) then
+		local sm = G.SM
+		sm:switch("game")
 	end
 end
 
 function IntroScene:draw()
 	cls()
-	cprint("Boot Scene", 40, COLORS.YELLOW)
+	cprint("Welcome, press something", 40, COLORS.YELLOW)
 end
 
 return IntroScene

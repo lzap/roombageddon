@@ -1,7 +1,12 @@
+---@class Object
+---@field __name string
+---@field super Object|nil
 local Object = {
 	__name = "Object"
 }
 
+---@param table? table
+---@return any
 function Object:new(table)
 	local cls = setmetatable({}, self)
 	self.__index = self
@@ -11,13 +16,17 @@ function Object:new(table)
 	return cls
 end
 
+---@param table? table
 function Object:__init(table)
 end
 
+---@return string
 function Object:__tostring()
 	return self.__name
 end
 
+---@param name string
+---@return any
 function Object:extend(name)
 	local cls = {
 		__init = self.__init,

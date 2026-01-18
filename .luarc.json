@@ -1,12 +1,24 @@
 {
-    "workspace.library": [
-        "./tic80.lua" 
+    "runtime.version": "Lua 5.3",
+    "runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "src/?.lua"
     ],
+    "workspace.library": [
+        "./tic80.lua"
+    ],
+    "workspace.checkThirdParty": false,
     "diagnostics.globals": [
-        "TIC", "SCN", "OVR", "BDR", "MENU",
+        "G", "BOOT", "TIC", "SCN", "OVR", "BDR", "MENU",
         "print", "cls", "pix", "line", "rect", "rectb", "circ", "circb", "elli", "ellib", "tri", "trib", "ttri",
         "clip", "spr", "mget", "mset", "fget", "fset", "map", "btn", "btnp", "key", "keyp", "mouse",
         "sfx", "music", "sync", "reset", "exit", "trace", "time", "tstamp", "peek", "poke", "peek1", "poke1",
         "peek2", "poke2", "peek4", "poke4", "memcpy", "memset", "vbank", "fmem", "pmem"
+    ],
+    "hint.enable": true,
+    "hint.setType": true,
+    "diagnostics.disable": [
+        "need-check-nil"
     ]
 }

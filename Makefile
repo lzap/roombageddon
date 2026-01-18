@@ -20,3 +20,7 @@ build:
 
 run:
 	$(TIC80) --scale=5 --skip --fs=. --cmd="load main.lua & run"
+
+.PHONY: lint
+lint:
+	~/.cursor/extensions/sumneko.lua-3.16.4-darwin-arm64/server/bin/lua-language-server --check=.
