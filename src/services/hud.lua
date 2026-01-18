@@ -37,20 +37,22 @@ function HUD.Draw(hud)
 		return
 	end
 
-	local shouldShow = true
+	local color = COLORS.WHITE
 	if hud.blink then
-		shouldShow = (math.floor(hud.blinkTimer / 30) % 2) == 0
-	end
-
-	if not shouldShow then
-		return
+		-- Blink between yellow and white, 2x faster (15 frames instead of 30)
+		local blinkState = math.floor(hud.blinkTimer / 15) % 2
+		if blinkState == 0 then
+			color = COLORS.YELLOW
+		else
+			color = COLORS.WHITE
+		end
 	end
 
 	local textWidth = print(hud.text, -8, -8)
 	local x = (SCREEN_WIDTH - textWidth) / 2
 	local y = SCREEN_HEIGHT - 8
 
-	print(hud.text, x, y, COLORS.WHITE)
+	print(hud.text, x, y, color)
 end
 
 return HUD

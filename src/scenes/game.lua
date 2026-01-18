@@ -51,6 +51,8 @@ function GameScene.LoadLevel(gs, level)
 	else
 		HUD.ClearText(gs.hud)
 	end
+	-- Turn off blinking when level loads
+	HUD.Blink(gs.hud, false)
 end
 
 function GameScene.ChangeLevel(gs, level)
@@ -69,6 +71,25 @@ function GameScene.Update(gs)
 	end
 
 	HUD.Update(gs.hud)
+
+	-- Check if all players are stuck
+	local allStuck = true
+	if #gs.players > 0 then
+		for _, p in ipairs(gs.players) do
+			if not Player.IsStuck(p, gs.currentLevel) then
+				allStuck = false
+				break
+			end
+		end
+	else
+		allStuck = false
+	end
+
+	-- Update HUD if all players are stuck
+	if allStuck then
+		HUD.SetText(gs.hud, "You suck, you're STUCK! Press B.")
+		HUD.Blink(gs.hud, true)
+	end
 
 	-- Reset level to starting position when B button is pressed
 	if btnp(BUTTONS.B) then

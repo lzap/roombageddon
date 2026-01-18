@@ -151,6 +151,31 @@ function Player.Update(p, currentLevel)
 	end
 end
 
+function Player.IsStuck(p, currentLevel)
+	-- Player is stuck if they're not moving and can't move in any direction
+	if p.currentTarget ~= nil or #p.positionQueue > 0 then
+		return false -- Player is currently moving
+	end
+
+	-- Get current grid position
+	local gridX = math.floor(p.entity.position.x / TILE_SIZE)
+	local gridY = math.floor(p.entity.position.y / TILE_SIZE)
+
+	-- Check if player can move in any direction
+	for direction = UP, RIGHT do
+		local dirData = DIRS[direction]
+		local targetGridX = gridX + dirData.x
+		local targetGridY = gridY + dirData.y
+		
+		if Map.canMoveTo(currentLevel, targetGridX, targetGridY) then
+			return false -- Can move in at least one direction
+		end
+	end
+
+	-- Cannot move in any direction
+	return true
+end
+
 function Player.Draw(p)
 	Entity.Draw(p.entity)
 end
