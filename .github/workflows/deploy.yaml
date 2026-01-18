@@ -24,9 +24,8 @@ jobs:
 
       - name: Setup TIC-80 CLI
         run: |
-          wget https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-linux.tar.gz
-          tar -xvf tic80-linux.tar.gz
-          sudo mv tic80 /usr/local/bin/tic80
+          wget https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-v1.1-linux.deb
+          sudo apt-get install -y ./tic80-v1.1-linux.deb
 
       - name: Build and Export Game
         run: |
