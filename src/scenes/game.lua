@@ -30,6 +30,7 @@ function GameScene.LoadLevel(gs, level)
 				x = posData.x,
 				y = posData.y
 			},
+			direction = posData.direction,
 			currentLevel = clampedLevel
 		}
 		table.insert(gs.players, player)

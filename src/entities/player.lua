@@ -7,10 +7,25 @@ local MapService = require("services.map_service")
 
 local Player = {}
 
+-- Helper function to convert direction to rotation
+local function directionToRotation(direction)
+	if direction == UP then
+		return ROTATE_270
+	elseif direction == DOWN then
+		return ROTATE_90
+	elseif direction == LEFT then
+		return ROTATE_180
+	elseif direction == RIGHT then
+		return ROTATE_NONE
+	end
+	return ROTATE_NONE -- Default to RIGHT
+end
+
 function Player.New(opts)
 	opts = opts or {}
 
 	local playerNumber = opts.playerNumber or 1
+	local initialDirection = opts.direction or RIGHT -- Default to RIGHT
 
 	-- Set default position if not provided
 	local pos = opts.position or Position.New {
@@ -20,6 +35,9 @@ function Player.New(opts)
 
 	-- Use configurable sprites, default to {256, 257}
 	local sprites = opts.sprites or { 256, 257 }
+
+	-- Convert direction to rotation
+	local initialRotation = directionToRotation(initialDirection)
 
 	-- Create entity with player-specific animation
 	local ent = Entity.New {
@@ -33,14 +51,15 @@ function Player.New(opts)
 		curAnim = "idle",
 		frame = 1,
 		frameTime = 0,
-		keyColor = opts.keyColor or 0
+		keyColor = opts.keyColor or 0,
+		rotate = initialRotation
 	}
 
 	return {
 		entity = ent,
 		playerNumber = playerNumber,
 		currentLevel = opts.currentLevel or 0,
-		lastDirection = 3, -- Default to RIGHT (rotate = 0)
+		lastDirection = initialDirection,
 		positionQueue = {}, -- FIFO queue of target positions
 		currentTarget = nil, -- Current target position we're moving towards
 		moveTimer = 0 -- Frames counter for pixel movement

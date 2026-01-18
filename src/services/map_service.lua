@@ -11,7 +11,8 @@ function MapService.getCoords(level)
 	return mapX, mapY
 end
 
--- Scan map for player position sprites (16-19) and return their positions
+-- Scan map for player position sprites and return their positions with direction
+-- Sprites: UP=64-67, DOWN=80-83, LEFT=96-99, RIGHT=112-115
 function MapService.findPlayerPositions(level)
 	local mapX, mapY = MapService.getCoords(level)
 	local positions = {}
@@ -20,11 +21,31 @@ function MapService.findPlayerPositions(level)
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
 			local spriteId = mget(mapX + x, mapY + y)
-			-- Check if sprite is a player position marker (16-19)
-			if spriteId >= PLAYER_SPRITE_START and spriteId <= PLAYER_SPRITE_START + 3 then
-				local playerNum = spriteId - PLAYER_SPRITE_START + 1
+			local playerNum = nil
+			local direction = nil
+			
+			-- Check UP sprites (64-67)
+			if spriteId >= PLAYER_SPRITE_UP and spriteId <= PLAYER_SPRITE_UP + 3 then
+				playerNum = spriteId - PLAYER_SPRITE_UP + 1
+				direction = UP
+			-- Check DOWN sprites (80-83)
+			elseif spriteId >= PLAYER_SPRITE_DOWN and spriteId <= PLAYER_SPRITE_DOWN + 3 then
+				playerNum = spriteId - PLAYER_SPRITE_DOWN + 1
+				direction = DOWN
+			-- Check LEFT sprites (96-99)
+			elseif spriteId >= PLAYER_SPRITE_LEFT and spriteId <= PLAYER_SPRITE_LEFT + 3 then
+				playerNum = spriteId - PLAYER_SPRITE_LEFT + 1
+				direction = LEFT
+			-- Check RIGHT sprites (112-115)
+			elseif spriteId >= PLAYER_SPRITE_RIGHT and spriteId <= PLAYER_SPRITE_RIGHT + 3 then
+				playerNum = spriteId - PLAYER_SPRITE_RIGHT + 1
+				direction = RIGHT
+			end
+			
+			if playerNum then
 				table.insert(positions, {
 					playerNumber = playerNum,
+					direction = direction,
 					x = x * TILE_SIZE,
 					y = y * TILE_SIZE
 				})
