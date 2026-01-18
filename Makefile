@@ -1,7 +1,7 @@
 .PHONY: all build run
 
 LUACC := luacc
-TIC80 := tic80
+TIC80 := /Applications/tic80.app/Contents/MacOS/tic80
 
 PLATFORM := linux
 GAME_NAME := mygame
@@ -16,7 +16,7 @@ all: build
 build:
 	$(LUACC) -o game.lua -p 6 -i ./ -i ./$(SRC_DIR) main $(SOURCES)
 	mkdir -p $(BUILD_DIR)
-	$(TIC80) --fs=. --cli --cmd="load game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
+	$(TIC80) --skip --fs=. --cli --cmd="load game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
 
 run:
-	$(TIC80) --fs=. --cmd="load main.lua & run"
+	$(TIC80) --scale=5 --skip --fs=. --cmd="load main.lua & run"

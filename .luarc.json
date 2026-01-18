@@ -1,0 +1,12 @@
+{
+    "workspace.library": [
+        "./tic80.lua" 
+    ],
+    "diagnostics.globals": [
+        "TIC", "SCN", "OVR", "BDR", "MENU",
+        "print", "cls", "pix", "line", "rect", "rectb", "circ", "circb", "elli", "ellib", "tri", "trib", "ttri",
+        "clip", "spr", "mget", "mset", "fget", "fset", "map", "btn", "btnp", "key", "keyp", "mouse",
+        "sfx", "music", "sync", "reset", "exit", "trace", "time", "tstamp", "peek", "poke", "peek1", "poke1",
+        "peek2", "poke2", "peek4", "poke4", "memcpy", "memset", "vbank", "fmem", "pmem"
+    ]
+}

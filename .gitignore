@@ -3,3 +3,4 @@ build/
 /game.lua
 .local/
 *.gif
+*.png
