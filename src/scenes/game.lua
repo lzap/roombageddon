@@ -38,9 +38,9 @@ function GameScene.LoadLevel(gs, level)
 		table.insert(gs.players, player)
 
 		-- Mark starting position as visited
-		local startGridX = math.floor(posData.x / TILE_SIZE)
-		local startGridY = math.floor(posData.y / TILE_SIZE)
-		Map.markVisited(clampedLevel, startGridX, startGridY, posData.playerNumber)
+		local startPos = Position.New { x = posData.x, y = posData.y }
+		local startGridPos = Position.Floor(startPos, TILE_SIZE)
+		Map.markVisited(clampedLevel, startGridPos.x, startGridPos.y, posData.playerNumber)
 	end
 
 	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")

@@ -101,18 +101,12 @@ function Player.Update(p, currentLevel)
 
 	-- If input detected, add target position to queue
 	if dirData then
-		local targetGridPos = Position.New {
-			x = endGridPos.x + dirData.x,
-			y = endGridPos.y + dirData.y
-		}
+		local targetGridPos = endGridPos + dirData
 
 		-- Check if movement is allowed (not blocked by bit 0)
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			-- Add target position to queue
-			table.insert(p.posQueue, Position.New {
-				x = targetGridPos.x * TILE_SIZE,
-				y = targetGridPos.y * TILE_SIZE
-			})
+			table.insert(p.posQueue, targetGridPos * TILE_SIZE)
 			-- Initialize move timer when starting to move
 			if #p.posQueue == 1 then
 				p.moveTimer = 0
@@ -129,19 +123,19 @@ function Player.Update(p, currentLevel)
 			p.moveTimer = 0
 			
 			-- Calculate direction to target
-			local dx = currentTarget.x - p.entity.position.x
-			local dy = currentTarget.y - p.entity.position.y
+			local diff = currentTarget - p.entity.position
+			
+			-- Calculate normalized step (1 pixel in the direction of target)
+			local step = Position.New {
+				x = diff.x ~= 0 and (diff.x > 0 and 1 or -1) or 0,
+				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0
+			}
 			
 			-- Move one pixel towards target
-			if dx ~= 0 then
-				p.entity.position.x = p.entity.position.x + (dx > 0 and 1 or -1)
-			end
-			if dy ~= 0 then
-				p.entity.position.y = p.entity.position.y + (dy > 0 and 1 or -1)
-			end
+			p.entity.position = p.entity.position + step
 			
 			-- Check if we've reached the target
-			if p.entity.position.x == currentTarget.x and p.entity.position.y == currentTarget.y then
+			if p.entity.position == currentTarget then
 				-- Mark this position as visited
 				local targetGridPos = Position.Floor(currentTarget, TILE_SIZE)
 				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, p.playerNumber)
@@ -165,10 +159,9 @@ function Player.IsStuck(p, currentLevel)
 	-- Check if player can move in any direction
 	for direction = UP, RIGHT do
 		local dirData = DIRS[direction]
-		local targetGridX = gridPos.x + dirData.x
-		local targetGridY = gridPos.y + dirData.y
+		local targetGridPos = gridPos + dirData
 		
-		if Map.canMoveTo(currentLevel, targetGridX, targetGridY) then
+		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			return false -- Can move in at least one direction
 		end
 	end
