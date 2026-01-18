@@ -1,10 +1,17 @@
 -- consts --
 
+LEVEL_COUNT = 11
 LEVEL_TEXT = {
-	-- Example entries (uncomment and modify as needed):
 	[0] = "D-pad or arrows to move",
-	-- [1] = "Find all the tiles!",
-	-- [2] = "Final level!",
+	[1] = "All tiles must be cleaned",
+	[2] = "Cleaning is single-pass only",
+	[3] = "No backtracking allowed",
+	[4] = "You move them all",
+	[5] = "Clean all rooms",
+	[6] = "There is only one way",
+	[7] = "Do not get stuck",
+	[8] = "",
+	[9] = "",
 }
 
 local BLACK = 0
@@ -52,7 +59,6 @@ PLAYER_SPRITE_LEFT = 96
 PLAYER_SPRITE_RIGHT = 112
 
 MAX_LEVELS = MAPS_PER_ROW * MAPS_PER_ROW
-LEVEL_COUNT = 3
 
 BUTTONS = {
 	A = A,
