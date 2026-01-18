@@ -55,22 +55,15 @@ function GameScene.OnEnter(gs)
 end
 
 function GameScene.Update(gs)
-	-- This is essentially your "System" runner
 	for _, p in ipairs(gs.players) do
 		Player.Update(p, gs.currentLevel)
 	end
 
-	-- Check for level completion
-	if MapService.isLevelComplete(gs.currentLevel) then
-		trace("Level " .. gs.currentLevel .. " complete!")
-
-		-- Check if this is the last level
+	if MapService.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
-			-- Switch to game over scene
 			local sm = G.SM
 			SceneManager.Switch(sm, "game_over")
 		else
-			-- Advance to next level
 			GameScene.LoadLevel(gs, gs.currentLevel + 1)
 		end
 	end
