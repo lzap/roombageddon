@@ -30,8 +30,11 @@ jobs:
       - name: Build and Export Game
         run: |
           mkdir -p build
-          # xvfb-run provides the virtual display TIC-80 needs to export
           xvfb-run --auto-servernum make build TIC80=tic80
+          if [ ! -f build/roombageddon.zip ]; then
+            echo "Error: Export failed, no zip produced!"
+            exit 1
+          fi
 
       - name: Extract ZIP for GitHub Pages
         run: |
