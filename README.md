@@ -20,7 +20,7 @@ luarocks install luacc
 
 ### Runing
 
-To run and test your game:
+To run and test the game:
 
 ```
 make run
@@ -28,10 +28,10 @@ make run
 
 ### Building
 
-To build your game:
+To build the game:
 
 ```
-make build
+make fmt lint build
 ```
 
 ## Acknowledgments
