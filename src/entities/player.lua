@@ -40,19 +40,21 @@ function Player.New(opts)
 		entity = ent,
 		playerNumber = playerNumber,
 		currentLevel = opts.currentLevel or 0,
-		lastDirection = 3 -- Default to RIGHT (rotate = 0)
+		lastDirection = 3, -- Default to RIGHT (rotate = 0)
+		positionQueue = {}, -- FIFO queue of target positions
+		currentTarget = nil, -- Current target position we're moving towards
+		moveTimer = 0 -- Frames counter for pixel movement
 	}
 end
 
 function Player.Update(p, currentLevel)
 	Entity.Update(p.entity)
 
-	-- Ensure player position is always aligned to grid
+	-- Get current grid position
 	local gridX = math.floor(p.entity.position.x / TILE_SIZE)
 	local gridY = math.floor(p.entity.position.y / TILE_SIZE)
-	p.entity.position.x = gridX * TILE_SIZE
-	p.entity.position.y = gridY * TILE_SIZE
 
+	-- Handle input: add target positions to queue
 	local dirData = nil
 	if btnp(BUTTONS.RIGHT) then
 		p.entity.rotate = ROTATE_NONE
@@ -72,18 +74,60 @@ function Player.Update(p, currentLevel)
 		dirData = DIRS[UP]
 	end
 
+	-- If input detected, add target position to queue
 	if dirData then
 		local targetGridX = gridX + dirData.x
 		local targetGridY = gridY + dirData.y
 
 		-- Check if movement is allowed (not blocked by bit 0)
 		if MapService.canMoveTo(currentLevel, targetGridX, targetGridY) then
-			-- Move player
-			p.entity.position.x = targetGridX * TILE_SIZE
-			p.entity.position.y = targetGridY * TILE_SIZE
+			-- Add target position to queue
+			table.insert(p.positionQueue, {
+				x = targetGridX * TILE_SIZE,
+				y = targetGridY * TILE_SIZE
+			})
+		end
+	end
 
-			-- Mark new tile as visited
-			MapService.markVisited(currentLevel, targetGridX, targetGridY, p.playerNumber)
+	-- If no current target but queue has items, set next target
+	if p.currentTarget == nil and #p.positionQueue > 0 then
+		p.currentTarget = table.remove(p.positionQueue, 1)
+		p.moveTimer = 0
+	end
+
+	-- Move pixel by pixel towards current target
+	if p.currentTarget then
+		p.moveTimer = p.moveTimer + 1
+		
+		if p.moveTimer >= MOVE_SPEED then
+			p.moveTimer = 0
+			
+			-- Calculate direction to target
+			local dx = p.currentTarget.x - p.entity.position.x
+			local dy = p.currentTarget.y - p.entity.position.y
+			
+			-- Move one pixel towards target
+			if dx ~= 0 then
+				p.entity.position.x = p.entity.position.x + (dx > 0 and 1 or -1)
+			end
+			if dy ~= 0 then
+				p.entity.position.y = p.entity.position.y + (dy > 0 and 1 or -1)
+			end
+			
+			-- Check if we've reached the target
+			if p.entity.position.x == p.currentTarget.x and p.entity.position.y == p.currentTarget.y then
+				-- Mark this position as visited
+				local targetGridX = math.floor(p.currentTarget.x / TILE_SIZE)
+				local targetGridY = math.floor(p.currentTarget.y / TILE_SIZE)
+				MapService.markVisited(currentLevel, targetGridX, targetGridY, p.playerNumber)
+				
+				-- Get next target from queue
+				if #p.positionQueue > 0 then
+					p.currentTarget = table.remove(p.positionQueue, 1)
+				else
+					p.currentTarget = nil
+				end
+			end
 		end
 	end
 end
