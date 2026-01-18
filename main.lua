@@ -9,31 +9,30 @@ local SceneManager = require("scenes.scene_manager")
 local IntroScene = require("scenes.intro")
 local GameScene = require("scenes.game")
 
----@class GameGlobal
----@field SM SceneManager|{}
-
----@type GameGlobal
 G = {
-	---@type SceneManager|{}
 	SM = {}
 }
 
 function BOOT()
-	---@type IntroScene
-	local intro = IntroScene:new {}
-	---@type GameScene
-	local game = GameScene:new {}
+	local intro = IntroScene.New()
+	local game = GameScene.New()
 
-	---@type SceneManager
-	G.SM = SceneManager:new {}
-	G.SM:add("intro", intro)
-	G.SM:add("game", game)
-	G.SM:switch("intro")
+	G.SM = SceneManager.New()
+	SceneManager.Add(G.SM, "intro", intro, {
+		update = IntroScene.Update,
+		draw = IntroScene.Draw
+	})
+	SceneManager.Add(G.SM, "game", game, {
+		onEnter = GameScene.OnEnter,
+		update = GameScene.Update,
+		draw = GameScene.Draw
+	})
+	SceneManager.Switch(G.SM, "intro")
 end
 
 function TIC()
-	G.SM:update()
-	G.SM:draw()
+	SceneManager.Update(G.SM)
+	SceneManager.Draw(G.SM)
 end
 
 -- <TILES>

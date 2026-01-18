@@ -1,15 +1,13 @@
 -- size --
-local Object = require("object")
 
----@class Size : Object
----@field width number
----@field height number
-local Size = Object:extend("Size")
+local Size = {}
 
----@param table? {width?: number, height?: number}
-function Size:__init(table)
-	self.width = table.width or 0
-	self.height = table.height or 0
+function Size.New(opts)
+	opts = opts or {}
+	return {
+		width = opts.width or 0,
+		height = opts.height or 0
+	}
 end
 
 return Size

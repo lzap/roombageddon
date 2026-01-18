@@ -2,22 +2,22 @@
 require("consts")
 require("common")
 
-local Scene = require("scenes.scene")
+local SceneManager = require("scenes.scene_manager")
 
-local IntroScene = Scene:extend("IntroScene")
+local IntroScene = {}
 
-function IntroScene:__init(table)
-	self.super:__init(table)
+function IntroScene.New()
+	return {}
 end
 
-function IntroScene:update()
+function IntroScene.Update(is)
 	if btnp(BUTTONS.A) or btnp(BUTTONS.B) then
 		local sm = G.SM
-		sm:switch("game")
+		SceneManager.Switch(sm, "game")
 	end
 end
 
-function IntroScene:draw()
+function IntroScene.Draw(is)
 	cls()
 	cprint("Welcome, press something", 40, COLORS.YELLOW)
 end

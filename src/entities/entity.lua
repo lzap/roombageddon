@@ -1,61 +1,52 @@
 -- entity --
 require("consts")
 
-local Object = require("object")
 local Size = require("components.size")
 local Position = require("components.position")
 
----@class Animation
----@field frames number[]
----@field speed number
+local Entity = {}
 
----@class Entity : Object
----@field size Size
----@field position Position
----@field key_color number
----@field frame number
----@field frame_time number
----@field cur_anim string|nil
----@field anim table<string, Animation>
-local Entity = Object:extend("Entity")
-
----@param table? {size?: Size, position?: Position, key_color?: number, frame?: number, frame_time?: number, cur_anim?: string, anim?: table<string, Animation>}
-function Entity:__init(table)
-	self.size = table.size or Size:new {
-		width = TILE_SIZE,
-		height = TILE_SIZE
+function Entity.New(opts)
+	opts = opts or {}
+	return {
+		size = opts.size or Size.New {
+			width = TILE_SIZE,
+			height = TILE_SIZE
+		},
+		position = opts.position or Position.New {
+			x = 0,
+			y = 0
+		},
+		keyColor = opts.keyColor or 0,
+		frame = opts.frame or 1,
+		frameTime = opts.frameTime or 0,
+		curAnim = opts.curAnim or nil,
+		anim = opts.anim or {}
 	}
-	---@type Size
-	self.size = self.size
-	
-	self.position = table.position or Position:new {
-		x = 0,
-		y = 0
-	}
-	---@type Position
-	self.position = self.position
-	
-	self.key_color = table.key_color or 0
-	self.frame = table.frame or 1
-	self.frame_time = table.frame_time or 0
-	self.cur_anim = table.cur_anim or nil
-	self.anim = table.anim or {}
 end
 
-function Entity:update()
-	self.frame_time = self.frame_time + 1
-	if self.frame_time >= self.anim[self.cur_anim].speed then
-		self.frame = self.frame + 1
-		if self.frame > #self.anim[self.cur_anim].frames then
-			self.frame = 1
+function Entity.Update(e)
+	if e.curAnim == nil or e.anim[e.curAnim] == nil then
+		return
+	end
+	
+	e.frameTime = e.frameTime + 1
+	if e.frameTime >= e.anim[e.curAnim].speed then
+		e.frame = e.frame + 1
+		if e.frame > #e.anim[e.curAnim].frames then
+			e.frame = 1
 		end
-		self.frame_time = 0
+		e.frameTime = 0
 	end
 end
 
-function Entity:draw()
-	local sprite = self.anim[self.cur_anim].frames[self.frame]
-	spr(sprite, self.position.x, self.position.y, self.key_color)
+function Entity.Draw(e)
+	if e.curAnim == nil or e.anim[e.curAnim] == nil then
+		return
+	end
+	
+	local sprite = e.anim[e.curAnim].frames[e.frame]
+	spr(sprite, e.position.x, e.position.y, e.keyColor)
 end
 
 return Entity

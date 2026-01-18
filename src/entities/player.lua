@@ -4,39 +4,49 @@ require("consts")
 local Entity = require("entities.entity")
 local Position = require("components.position")
 
----@class Player : Entity
----@field player_number number
-local Player = Entity:extend("Player")
+local Player = {}
 
----@param table? {player_number?: number, position?: Position, key_color?: number, sprites?: number[]}
-function Player:__init(table)
-	table = table or {}
+function Player.New(opts)
+	opts = opts or {}
 	
-	self.player_number = table.player_number or 1
+	local playerNumber = opts.playerNumber or 1
 	
 	-- Set default position if not provided
-	local position = table.position or Position:new {
+	local pos = opts.position or Position.New {
 		x = SCREEN_WIDTH / 2 - TILE_SIZE,
 		y = SCREEN_HEIGHT / 2 - TILE_SIZE
 	}
 	
 	-- Use configurable sprites, default to {256, 257}
-	local sprites = table.sprites or {256, 257}
+	local sprites = opts.sprites or {256, 257}
 	
-	-- Initialize parent Entity with player-specific animation
-	self.super:__init {
-		position = position,
+	-- Create entity with player-specific animation
+	local ent = Entity.New {
+		position = pos,
 		anim = {
 			idle = {
 				frames = sprites,
 				speed = 10
 			}
 		},
-		cur_anim = "idle",
+		curAnim = "idle",
 		frame = 1,
-		frame_time = 0,
-		key_color = table.key_color or 0
+		frameTime = 0,
+		keyColor = opts.keyColor or 0
 	}
+	
+	return {
+		entity = ent,
+		playerNumber = playerNumber
+	}
+end
+
+function Player.Update(p)
+	Entity.Update(p.entity)
+end
+
+function Player.Draw(p)
+	Entity.Draw(p.entity)
 end
 
 return Player

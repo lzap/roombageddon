@@ -1,39 +1,42 @@
 -- scene manager --
-local Object = require("object")
 
----@class SceneManager : Object
----@field scenes table<string, Scene>
----@field current string|nil
-local SceneManager = Object:extend("SceneManager")
+local SceneManager = {}
 
-function SceneManager:__init()
-	self.scenes = {}
-	self.current = nil
+function SceneManager.New()
+	return {
+		scenes = {},
+		handlers = {},
+		current = nil
+	}
 end
 
----@param name string
----@param scene Scene
-function SceneManager:add(name, scene)
-	self.scenes[name] = scene
+function SceneManager.Add(sm, name, sceneData, handlers)
+	sm.scenes[name] = sceneData
+	sm.handlers[name] = handlers
 end
 
----@param name string
-function SceneManager:switch(name)
-	if self.current ~= name then
-		if self.current then
-			self.scenes[self.current]:on_exit()
+function SceneManager.Switch(sm, name)
+	if sm.current ~= name then
+		if sm.current and sm.handlers[sm.current] and sm.handlers[sm.current].onExit then
+			sm.handlers[sm.current].onExit(sm.scenes[sm.current])
 		end
-		self.current = name
-		self.scenes[self.current]:on_enter()
+		sm.current = name
+		if sm.handlers[name] and sm.handlers[name].onEnter then
+			sm.handlers[name].onEnter(sm.scenes[name])
+		end
 	end
 end
 
-function SceneManager:update()
-	self.scenes[self.current]:update()
+function SceneManager.Update(sm)
+	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].update then
+		sm.handlers[sm.current].update(sm.scenes[sm.current])
+	end
 end
 
-function SceneManager:draw()
-	self.scenes[self.current]:draw()
+function SceneManager.Draw(sm)
+	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].draw then
+		sm.handlers[sm.current].draw(sm.scenes[sm.current])
+	end
 end
 
 return SceneManager

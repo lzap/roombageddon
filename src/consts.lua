@@ -26,35 +26,19 @@ local X = 6 -- A
 local Y = 7 -- S
 local NONE = 99
 
----@type number
 SCREEN_WIDTH = 240
----@type number
 SCREEN_HEIGHT = 136
 
----@type number
 TILE_SIZE = 8
----@type number
 SPRITE_SIZE = 8
 
----@type number
 MAPS_PER_ROW = 8
----@type number
 MAP_WIDTH = 30
----@type number
 MAP_HEIGHT = 17
 
----@class ButtonsTable
----@field A number
----@field B number
----@field X number
----@field Y number
----@field LEFT number
----@field RIGHT number
----@field UP number
----@field DOWN number
----@field NONE number
+PLAYER_SPRITE_START = 16
+MAX_LEVELS = MAPS_PER_ROW * MAPS_PER_ROW
 
----@type ButtonsTable
 BUTTONS = {
 	A = A,
 	B = B,
@@ -67,11 +51,6 @@ BUTTONS = {
 	NONE = NONE
 }
 
----@class Direction
----@field x number
----@field y number
-
----@type table<number, Direction>
 DIRS = {
 	[UP] = {
 		x = 0,
@@ -95,25 +74,6 @@ DIRS = {
 	}
 }
 
----@class ColorsTable
----@field BLACK number
----@field PURPLE number
----@field RED number
----@field ORANGE number
----@field YELLOW number
----@field L_GREEN number
----@field GREEN number
----@field D_GREEN number
----@field D_BLUE number
----@field BLUE number
----@field L_BLUE number
----@field CYAN number
----@field WHITE number
----@field L_GRAY number
----@field GRAY number
----@field D_GRAY number
-
----@type ColorsTable
 COLORS = {
 	BLACK = BLACK,
 	PURPLE = PURPLE,
