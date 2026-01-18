@@ -44,4 +44,55 @@ function MapService.loadLevel(level)
 	return MapService.findPlayerPositions(level), level
 end
 
+-- Check if a tile is walkable (bit 0 must not be set)
+function MapService.canMoveTo(level, gridX, gridY)
+	-- Check bounds
+	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
+		return false
+	end
+	
+	local mapX, mapY = MapService.getCoords(level)
+	local spriteId = mget(mapX + gridX, mapY + gridY)
+	
+	-- Check if sprite flag 0 (bit 0) is set (blocking movement)
+	-- Use fget to check sprite flags, not the sprite ID value
+	if fget(spriteId, 0) then
+		return false
+	end
+	
+	return true
+end
+
+-- Mark a tile as visited with the appropriate sprite (32-35 for P1-P4)
+function MapService.markVisited(level, gridX, gridY, playerNumber)
+	-- Check bounds
+	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
+		return
+	end
+	
+	local mapX, mapY = MapService.getCoords(level)
+	-- Sprite 32 for P1, 33 for P2, 34 for P3, 35 for P4
+	local visitedSprite = 31 + playerNumber
+	mset(mapX + gridX, mapY + gridY, visitedSprite)
+end
+
+-- Check if level is complete (no tiles with bit 1 set)
+function MapService.isLevelComplete(level)
+	local mapX, mapY = MapService.getCoords(level)
+	
+	-- Scan all tiles in the level
+	for y = 0, MAP_HEIGHT - 1 do
+		for x = 0, MAP_WIDTH - 1 do
+			local spriteId = mget(mapX + x, mapY + y)
+			-- Check if sprite flag 1 (bit 1) is set
+			-- Use fget to check sprite flags
+			if fget(spriteId, 1) then
+				return false
+			end
+		end
+	end
+	
+	return true
+end
+
 return MapService

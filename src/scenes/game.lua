@@ -4,6 +4,7 @@ require("consts")
 local Player = require("entities.player")
 local Position = require("components.position")
 local MapService = require("services.map_service")
+local SceneManager = require("scenes.scene_manager")
 
 local GameScene = {}
 
@@ -23,13 +24,20 @@ function GameScene.LoadLevel(gs, level)
 	
 	-- Create players at found positions
 	for _, posData in ipairs(playerPositions) do
-		table.insert(gs.players, Player.New {
+		local player = Player.New {
 			playerNumber = posData.playerNumber,
 			position = Position.New {
 				x = posData.x,
 				y = posData.y
-			}
-		})
+			},
+			currentLevel = clampedLevel
+		}
+		table.insert(gs.players, player)
+		
+		-- Mark starting position as visited
+		local startGridX = math.floor(posData.x / TILE_SIZE)
+		local startGridY = math.floor(posData.y / TILE_SIZE)
+		MapService.markVisited(clampedLevel, startGridX, startGridY, posData.playerNumber)
 	end
 	
 	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")
@@ -48,11 +56,23 @@ end
 function GameScene.Update(gs)
 	-- This is essentially your "System" runner
 	for _, p in ipairs(gs.players) do
-		Player.Update(p)
+		Player.Update(p, gs.currentLevel)
 	end
 	
-	-- Level transition logic could go here:
-	-- if PlayerAtExit(gs.players[1]) then GameScene.LoadLevel(gs, gs.currentLevel + 1) end
+	-- Check for level completion
+	if MapService.isLevelComplete(gs.currentLevel) then
+		trace("Level " .. gs.currentLevel .. " complete!")
+		
+		-- Check if this is the last level
+		if gs.currentLevel >= LEVEL_COUNT - 1 then
+			-- Switch to game over scene
+			local sm = G.SM
+			SceneManager.Switch(sm, "game_over")
+		else
+			-- Advance to next level
+			GameScene.LoadLevel(gs, gs.currentLevel + 1)
+		end
+	end
 end
 
 function GameScene.Draw(gs)
