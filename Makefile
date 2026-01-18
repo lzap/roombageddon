@@ -16,7 +16,8 @@ all: build
 build:
 	$(LUACC) -o game.lua -p 6 -i ./ -i ./$(SRC_DIR) main $(SOURCES)
 	mkdir -p $(BUILD_DIR)
-	$(TIC80) --skip --fs=. --cli --cmd="new lua & import game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
+	# Clunky import since GHA does not contain PRO version
+	$(TIC80) --skip --fs=. --cli --cmd="new lua & import code game.lua & import tiles game.lua & import sprites game.lua & import map game.lua & export $(PLATFORM) $(BUILD_DIR)/$(GAME_NAME) alone=1 & exit"
 
 fmt:
 	@stylua src/ main.lua
