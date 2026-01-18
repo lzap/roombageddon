@@ -4,13 +4,19 @@ A TIC-80 game by Lukáš Zapletal aka `lzap`.
 
 ## Requirements
 
-- Linux or macOS (it probably works on Windows with MinGW or WSL)
-- GNU Make
 - TIC-80 PRO (consider buying the PRO version or sponsoring @nesbox)
+- Linux or MacOS (it probably works on Windows with MinGW or WSL)
+- GNU Make
 - luarocks
 - luacc
-- selene
 - stylua
+
+Something like (MacOS):
+
+```
+brew install lua luarocks stylua
+luarocks install luacc
+```
 
 ### Runing
 

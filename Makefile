@@ -1,9 +1,9 @@
 .PHONY: all build lint fmt run
 
 LUACC := luacc
-TIC80 := /Applications/tic80.app/Contents/MacOS/tic80
+TIC80 ?= $(shell which tic80 || echo /Applications/tic80.app/Contents/MacOS/tic80)
 
-PLATFORM := linux
+PLATFORM := html
 GAME_NAME := roombageddon
 
 BUILD_DIR := build
