@@ -10,12 +10,12 @@ local SFX = {}
 -- @param world World instance
 function SFX.Process(world)
 	-- Query entities with movement components
-	local entities = World.Query(world, {"movement"})
-	
+	local entities = World.Query(world, { "movement" })
+
 	if #entities == 0 then
 		return
 	end
-	
+
 	-- Check if all have no sound
 	if all(entities, function(e)
 		return e.movement.sfx == SFX_NONE

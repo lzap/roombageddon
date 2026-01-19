@@ -42,7 +42,7 @@ end
 -- @return Array of entities that have all specified components
 function World.Query(world, componentNames)
 	local results = {}
-	
+
 	for _, entity in ipairs(world.entities) do
 		local hasAll = true
 		for _, componentName in ipairs(componentNames) do
@@ -55,7 +55,7 @@ function World.Query(world, componentNames)
 			table.insert(results, entity)
 		end
 	end
-	
+
 	return results
 end
 

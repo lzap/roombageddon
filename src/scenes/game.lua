@@ -18,13 +18,13 @@ local GameScene = {}
 
 function GameScene.New()
 	local world = World.New()
-	
+
 	-- Register Systems (order matters: input -> movement -> animation -> render)
 	World.AddSystem(world, InputSystem)
 	World.AddSystem(world, MovementSystem)
 	World.AddSystem(world, AnimationSystem)
 	World.AddSystem(world, RenderSystem)
-	
+
 	return {
 		currentLevel = 0,
 		hud = HUD.New(),
@@ -35,7 +35,7 @@ end
 function GameScene.LoadLevel(gs, level)
 	local playerPositions, clampedLevel = Map.loadLevel(level)
 	gs.currentLevel = clampedLevel
-	
+
 	-- Store current level in world for systems to access
 	gs.world.currentLevel = clampedLevel
 
@@ -55,7 +55,7 @@ function GameScene.LoadLevel(gs, level)
 			direction = posData.direction,
 			currentLevel = clampedLevel,
 		})
-		
+
 		-- Add player entity to world
 		World.AddEntity(gs.world, playerEntity)
 
@@ -66,7 +66,7 @@ function GameScene.LoadLevel(gs, level)
 	end
 
 	-- Query world for player count
-	local players = World.Query(gs.world, {"player"})
+	local players = World.Query(gs.world, { "player" })
 	trace("Loaded level " .. clampedLevel .. " with " .. #players .. " players")
 
 	-- Set level text if it exists
@@ -92,12 +92,12 @@ end
 function GameScene.Update(gs)
 	-- Update world's current level
 	gs.world.currentLevel = gs.currentLevel
-	
+
 	-- Update all systems (InputSystem -> MovementSystem -> AnimationSystem)
 	World.Update(gs.world)
-	
+
 	-- Update player entities' current level (for systems to access)
-	local players = World.Query(gs.world, {"player"})
+	local players = World.Query(gs.world, { "player" })
 	for _, entity in ipairs(players) do
 		entity.currentLevel = gs.currentLevel
 	end

@@ -33,23 +33,23 @@ function InputSystem.ProcessEntity(entity, currentLevel)
 
 	local input = entity.input
 	local movement = entity.movement
-	
+
 	-- Reset SFX flag at start of update
 	movement.sfx = SFX_NONE
-	
+
 	-- Get current grid position
 	local gridPos = entity.position // TILE_SIZE
-	
+
 	-- Calculate grid position at the end of the queue (where entity will be after all queued moves)
 	local endGridPos = gridPos
 	if #movement.posQueue > 0 then
 		endGridPos = movement.posQueue[#movement.posQueue] // TILE_SIZE
 	end
-	
+
 	-- Handle input: detect button presses
 	local dirData = nil
 	local newDirection = nil
-	
+
 	if btnp(BUTTONS.RIGHT) then
 		newDirection = RIGHT
 		dirData = DIRS[RIGHT]
@@ -63,15 +63,15 @@ function InputSystem.ProcessEntity(entity, currentLevel)
 		newDirection = UP
 		dirData = DIRS[UP]
 	end
-	
+
 	-- If input detected, process it
 	if dirData and newDirection then
 		input.direction = newDirection
 		input.lastDirection = newDirection
-		
+
 		-- Update entity rotation
 		entity.rotate = directionToRotation(newDirection)
-		
+
 		-- Check if movement is valid
 		local targetGridPos = endGridPos + dirData
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
@@ -93,13 +93,13 @@ end
 -- @param world World instance
 function InputSystem.Update(world)
 	-- Query entities that have input and movement components
-	local entities = World.Query(world, {"input", "movement", "position"})
-	
+	local entities = World.Query(world, { "input", "movement", "position" })
+
 	-- Get current level from world (stored as a property)
 	-- For now, we'll need to pass it differently or store it in world
 	-- Let's check if entities have a level property or if we need to add it
 	local currentLevel = world.currentLevel or 0
-	
+
 	for _, entity in ipairs(entities) do
 		-- Use entity's level if available, otherwise use world's level
 		local level = entity.currentLevel or currentLevel

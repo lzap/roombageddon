@@ -18,7 +18,7 @@ function MovementSystem.ProcessEntity(entity, currentLevel)
 	end
 
 	local movement = entity.movement
-	
+
 	-- Move pixel by pixel towards first target in queue
 	if #movement.posQueue > 0 then
 		local currentTarget = movement.posQueue[1]
@@ -57,11 +57,11 @@ end
 -- @param world World instance
 function MovementSystem.Update(world)
 	-- Query entities that have movement and position components
-	local entities = World.Query(world, {"movement", "position"})
-	
+	local entities = World.Query(world, { "movement", "position" })
+
 	-- Get current level from world
 	local currentLevel = world.currentLevel or 0
-	
+
 	for _, entity in ipairs(entities) do
 		-- Use entity's level if available, otherwise use world's level
 		local level = entity.currentLevel or currentLevel

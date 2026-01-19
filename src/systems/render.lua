@@ -27,8 +27,8 @@ end
 -- @param world World instance
 function RenderSystem.Draw(world)
 	-- Query entities that have position and animation components
-	local entities = World.Query(world, {"position", "animation"})
-	
+	local entities = World.Query(world, { "position", "animation" })
+
 	for _, entity in ipairs(entities) do
 		RenderSystem.DrawEntity(entity)
 	end

@@ -30,12 +30,12 @@ function AnimationComponent.GetCurrentSprite(animation)
 	if animation.curAnim == nil or animation.anim == nil or animation.anim[animation.curAnim] == nil then
 		return nil
 	end
-	
+
 	local animData = animation.anim[animation.curAnim]
 	if animData.frames == nil or #animData.frames == 0 then
 		return nil
 	end
-	
+
 	return animData.frames[animation.frame]
 end
 
