@@ -2,7 +2,7 @@
 require("consts")
 require("common")
 
-local SceneManager = require("scenes.scene_manager")
+local Director = require("scenes.director")
 
 local IntroScene = {}
 
@@ -22,7 +22,7 @@ function IntroScene.Update(is)
 		or btnp(BUTTONS.DOWN)
 	then
 		local sm = G.SM
-		SceneManager.Switch(sm, "game")
+		Director.Switch(sm, "game")
 	end
 end
 

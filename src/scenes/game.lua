@@ -5,7 +5,7 @@ require("common")
 local Player = require("entities.player")
 local PositionComponent = require("components.position")
 local Map = require("services.map")
-local SceneManager = require("scenes.scene_manager")
+local Director = require("scenes.director")
 local HUD = require("services.hud")
 local SFX = require("services.sfx")
 local World = require("world")
@@ -137,7 +137,7 @@ function GameScene.Update(gs)
 	if Map.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
 			local sm = G.SM
-			SceneManager.Switch(sm, "game_over")
+			Director.Switch(sm, "game_over")
 		else
 			GameScene.LoadLevel(gs, gs.currentLevel + 1)
 		end

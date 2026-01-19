@@ -1,8 +1,8 @@
--- scene manager --
+-- director --
 
-local SceneManager = {}
+local Director = {}
 
-function SceneManager.New()
+function Director.New()
 	return {
 		scenes = {},
 		handlers = {},
@@ -10,12 +10,12 @@ function SceneManager.New()
 	}
 end
 
-function SceneManager.Add(sm, name, sceneData, handlers)
+function Director.Add(sm, name, sceneData, handlers)
 	sm.scenes[name] = sceneData
 	sm.handlers[name] = handlers
 end
 
-function SceneManager.Switch(sm, name)
+function Director.Switch(sm, name)
 	if sm.current ~= name then
 		if sm.current and sm.handlers[sm.current] and sm.handlers[sm.current].onExit then
 			sm.handlers[sm.current].onExit(sm.scenes[sm.current])
@@ -27,16 +27,16 @@ function SceneManager.Switch(sm, name)
 	end
 end
 
-function SceneManager.Update(sm)
+function Director.Update(sm)
 	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].update then
 		sm.handlers[sm.current].update(sm.scenes[sm.current])
 	end
 end
 
-function SceneManager.Draw(sm)
+function Director.Draw(sm)
 	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].draw then
 		sm.handlers[sm.current].draw(sm.scenes[sm.current])
 	end
 end
 
-return SceneManager
+return Director

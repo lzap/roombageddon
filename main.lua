@@ -7,7 +7,7 @@
 
 package.path = package.path .. ";./src/?.lua"
 
-local SceneManager = require("scenes.scene_manager")
+local Director = require("scenes.director")
 local IntroScene = require("scenes.intro")
 local GameScene = require("scenes.game")
 local GameOverScene = require("scenes.game_over")
@@ -25,26 +25,26 @@ function BOOT()
 	local game = GameScene.New()
 	local gameOver = GameOverScene.New()
 
-	G.SM = SceneManager.New()
-	SceneManager.Add(G.SM, "intro", intro, {
+	G.SM = Director.New()
+	Director.Add(G.SM, "intro", intro, {
 		update = IntroScene.Update,
 		draw = IntroScene.Draw,
 	})
-	SceneManager.Add(G.SM, "game", game, {
+	Director.Add(G.SM, "game", game, {
 		onEnter = GameScene.OnEnter,
 		update = GameScene.Update,
 		draw = GameScene.Draw,
 	})
-	SceneManager.Add(G.SM, "game_over", gameOver, {
+	Director.Add(G.SM, "game_over", gameOver, {
 		update = GameOverScene.Update,
 		draw = GameOverScene.Draw,
 	})
-	SceneManager.Switch(G.SM, "intro")
+	Director.Switch(G.SM, "intro")
 end
 
 function TIC()
-	SceneManager.Update(G.SM)
-	SceneManager.Draw(G.SM)
+	Director.Update(G.SM)
+	Director.Draw(G.SM)
 end
 
 -- <TILES>
