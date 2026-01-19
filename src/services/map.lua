@@ -1,7 +1,7 @@
 -- map --
 require("consts")
 
-local Position = require("components.position")
+local PositionComponent = require("components.position")
 local Map = {}
 
 -- Cache to store original map states for each level

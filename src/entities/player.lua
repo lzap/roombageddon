@@ -4,10 +4,10 @@
 require("consts")
 
 local Entity = require("entities.entity")
-local Position = require("components.position")
-local Animation = require("components.animation")
-local Input = require("components.input")
-local Movement = require("components.movement")
+local PositionComponent = require("components.position")
+local AnimationComponent = require("components.animation")
+local InputComponent = require("components.input")
+local MovementComponent = require("components.movement")
 local PlayerComponent = require("components.player")
 
 local Player = {}
@@ -20,7 +20,7 @@ function Player.New(opts)
 
 	-- Set default position if not provided
 	local pos = opts.position
-		or Position.New({
+		or PositionComponent.New({
 			x = SCREEN_WIDTH / 2 - TILE_SIZE,
 			y = SCREEN_HEIGHT / 2 - TILE_SIZE,
 		})
@@ -44,7 +44,7 @@ function Player.New(opts)
 	local initialRotation = directionToRotation(initialDirection)
 
 	-- Create animation component
-	local animation = Animation.New({
+	local animation = AnimationComponent.New({
 		anim = {
 			idle = {
 				frames = sprites,
@@ -62,12 +62,12 @@ function Player.New(opts)
 	})
 
 	-- Create input component
-	local input = Input.New({
+	local input = InputComponent.New({
 		lastDirection = initialDirection,
 	})
 
 	-- Create movement component
-	local movement = Movement.New({
+	local movement = MovementComponent.New({
 		posQueue = {},
 		moveTimer = 0,
 		sfx = SFX_NONE,

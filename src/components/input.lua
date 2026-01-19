@@ -1,8 +1,8 @@
 -- input component --
 
-local Input = {}
+local InputComponent = {}
 
-function Input.New(opts)
+function InputComponent.New(opts)
 	opts = opts or {}
 	return {
 		lastDirection = opts.lastDirection or nil, -- Last direction moved
@@ -12,8 +12,8 @@ end
 
 -- Clear current input direction
 -- @param input Input component
-function Input.Clear(input)
+function InputComponent.Clear(input)
 	input.direction = nil
 end
 
-return Input
+return InputComponent

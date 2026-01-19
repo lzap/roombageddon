@@ -1,12 +1,12 @@
 -- player component --
 
-local Player = {}
+local PlayerComponent = {}
 
-function Player.New(opts)
+function PlayerComponent.New(opts)
 	opts = opts or {}
 	return {
 		playerNumber = opts.playerNumber or 1, -- Player number (1-4)
 	}
 end
 
-return Player
+return PlayerComponent

@@ -3,7 +3,7 @@ require("consts")
 require("common")
 
 local Player = require("entities.player")
-local Position = require("components.position")
+local PositionComponent = require("components.position")
 local Map = require("services.map")
 local SceneManager = require("scenes.scene_manager")
 local HUD = require("services.hud")
@@ -48,7 +48,7 @@ function GameScene.LoadLevel(gs, level)
 		-- Player.New() now returns entity directly
 		local playerEntity = Player.New({
 			playerNumber = posData.playerNumber,
-			position = Position.New({
+			position = PositionComponent.New({
 				x = posData.x,
 				y = posData.y,
 			}),
@@ -60,7 +60,7 @@ function GameScene.LoadLevel(gs, level)
 		World.AddEntity(gs.world, playerEntity)
 
 		-- Mark starting position as visited
-		local startPos = Position.New({ x = posData.x, y = posData.y })
+		local startPos = PositionComponent.New({ x = posData.x, y = posData.y })
 		local startGridPos = startPos // TILE_SIZE
 		Map.markVisited(clampedLevel, startGridPos.x, startGridPos.y, posData.playerNumber)
 	end

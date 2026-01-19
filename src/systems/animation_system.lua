@@ -2,7 +2,7 @@
 -- Updates animation frames for entities with animation components
 
 local World = require("world")
-local Animation = require("components.animation")
+local AnimationComponent = require("components.animation")
 
 local AnimationSystem = {}
 

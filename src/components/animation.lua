@@ -1,8 +1,8 @@
 -- animation component --
 
-local Animation = {}
+local AnimationComponent = {}
 
-function Animation.New(opts)
+function AnimationComponent.New(opts)
 	opts = opts or {}
 	return {
 		anim = opts.anim or {}, -- Dictionary of animations: {name = {frames = {...}, speed = N}}
@@ -15,7 +15,7 @@ end
 -- Set the current animation
 -- @param animation Animation component
 -- @param animName Name of the animation to set
-function Animation.SetAnimation(animation, animName)
+function AnimationComponent.SetAnimation(animation, animName)
 	if animation.anim[animName] then
 		animation.curAnim = animName
 		animation.frame = 1
@@ -26,7 +26,7 @@ end
 -- Get current sprite ID from animation
 -- @param animation Animation component
 -- @return Sprite ID or nil
-function Animation.GetCurrentSprite(animation)
+function AnimationComponent.GetCurrentSprite(animation)
 	if animation.curAnim == nil or animation.anim == nil or animation.anim[animation.curAnim] == nil then
 		return nil
 	end
@@ -39,4 +39,4 @@ function Animation.GetCurrentSprite(animation)
 	return animData.frames[animation.frame]
 end
 
-return Animation
+return AnimationComponent

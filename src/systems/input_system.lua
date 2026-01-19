@@ -3,8 +3,8 @@
 
 require("consts")
 local World = require("world")
-local Position = require("components.position")
-local Movement = require("components.movement")
+local PositionComponent = require("components.position")
+local MovementComponent = require("components.movement")
 local Map = require("services.map")
 
 local InputSystem = {}
@@ -77,7 +77,7 @@ function InputSystem.ProcessEntity(entity, currentLevel)
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			-- Queue valid movement
 			local targetPos = targetGridPos * TILE_SIZE
-			Movement.QueuePosition(movement, targetPos)
+			MovementComponent.QueuePosition(movement, targetPos)
 			movement.sfx = SFX_MOVED
 		else
 			-- Bumped into wall

@@ -3,8 +3,8 @@
 
 require("consts")
 local World = require("world")
-local Position = require("components.position")
-local Movement = require("components.movement")
+local PositionComponent = require("components.position")
+local MovementComponent = require("components.movement")
 local Map = require("services.map")
 
 local MovementSystem = {}
@@ -31,7 +31,7 @@ function MovementSystem.ProcessEntity(entity, currentLevel)
 			local diff = currentTarget - entity.position
 
 			-- Calculate normalized step (1 pixel in the direction of target)
-			local step = Position.New({
+			local step = PositionComponent.New({
 				x = diff.x ~= 0 and (diff.x > 0 and 1 or -1) or 0,
 				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0,
 			})

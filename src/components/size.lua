@@ -1,8 +1,8 @@
--- size --
+-- size component --
 
-local Size = {}
+local SizeComponent = {}
 
-function Size.New(opts)
+function SizeComponent.New(opts)
 	opts = opts or {}
 	return {
 		width = opts.width or 0,
@@ -10,4 +10,4 @@ function Size.New(opts)
 	}
 end
 
-return Size
+return SizeComponent

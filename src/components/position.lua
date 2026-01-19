@@ -1,72 +1,72 @@
--- position --
+-- position component --
 require("consts")
 
-local Position = {}
+local PositionComponent = {}
 
 -- Metatable for Position objects with overloaded operators
 local positionMetatable = {
 	-- Addition: Position + Position or Position + {x, y}
 	__add = function(a, b)
 		if type(a) == "number" then
-			-- scalar + Position (not common, but handle it)
-			return Position.New({ x = b.x + a, y = b.y + a })
+		-- scalar + Position (not common, but handle it)
+		return PositionComponent.New({ x = b.x + a, y = b.y + a })
 		elseif type(b) == "number" then
-			-- Position + scalar
-			return Position.New({ x = a.x + b, y = a.y + b })
+		-- Position + scalar
+		return PositionComponent.New({ x = a.x + b, y = a.y + b })
 		else
-			-- Position + Position or Position + {x, y}
-			return Position.New({ x = a.x + (b.x or 0), y = a.y + (b.y or 0) })
+		-- Position + Position or Position + {x, y}
+		return PositionComponent.New({ x = a.x + (b.x or 0), y = a.y + (b.y or 0) })
 		end
 	end,
 
 	-- Subtraction: Position - Position
 	__sub = function(a, b)
 		if type(b) == "number" then
-			-- Position - scalar
-			return Position.New({ x = a.x - b, y = a.y - b })
+		-- Position - scalar
+		return PositionComponent.New({ x = a.x - b, y = a.y - b })
 		else
-			-- Position - Position or Position - {x, y}
-			return Position.New({ x = a.x - (b.x or 0), y = a.y - (b.y or 0) })
+		-- Position - Position or Position - {x, y}
+		return PositionComponent.New({ x = a.x - (b.x or 0), y = a.y - (b.y or 0) })
 		end
 	end,
 
 	-- Multiplication: Position * scalar or scalar * Position
 	__mul = function(a, b)
 		if type(a) == "number" then
-			-- scalar * Position
-			return Position.New({ x = b.x * a, y = b.y * a })
+		-- scalar * Position
+		return PositionComponent.New({ x = b.x * a, y = b.y * a })
 		elseif type(b) == "number" then
-			-- Position * scalar
-			return Position.New({ x = a.x * b, y = a.y * b })
+		-- Position * scalar
+		return PositionComponent.New({ x = a.x * b, y = a.y * b })
 		else
-			-- Position * Position (dot product would be unusual, but return component-wise)
-			return Position.New({ x = a.x * (b.x or 0), y = a.y * (b.y or 0) })
+		-- Position * Position (dot product would be unusual, but return component-wise)
+		return PositionComponent.New({ x = a.x * (b.x or 0), y = a.y * (b.y or 0) })
 		end
 	end,
 
 	-- Division: Position / scalar
 	__div = function(a, b)
 		if type(b) == "number" then
-			return Position.New({ x = a.x / b, y = a.y / b })
+		return PositionComponent.New({ x = a.x / b, y = a.y / b })
 		else
-			-- Position / Position (component-wise division)
-			return Position.New({ x = a.x / (b.x or 1), y = a.y / (b.y or 1) })
+		-- Position / Position (component-wise division)
+		return PositionComponent.New({ x = a.x / (b.x or 1), y = a.y / (b.y or 1) })
 		end
 	end,
 
 	-- Floor division: Position // scalar
 	__idiv = function(a, b)
 		if type(b) == "number" then
-			return Position.New({ x = math.floor(a.x / b), y = math.floor(a.y / b) })
+		return PositionComponent.New({ x = math.floor(a.x / b), y = math.floor(a.y / b) })
 		else
-			-- Position // Position (component-wise floor division)
-			return Position.New({ x = math.floor(a.x / (b.x or 1)), y = math.floor(a.y / (b.y or 1)) })
+		-- Position // Position (component-wise floor division)
+		return PositionComponent.New({ x = math.floor(a.x / (b.x or 1)), y = math.floor(a.y / (b.y or 1)) })
 		end
 	end,
 
 	-- Unary minus: -Position
 	__unm = function(a)
-		return Position.New({ x = -a.x, y = -a.y })
+		return PositionComponent.New({ x = -a.x, y = -a.y })
 	end,
 
 	-- Equality: Position == Position
@@ -75,7 +75,7 @@ local positionMetatable = {
 	end,
 }
 
-function Position.New(opts)
+function PositionComponent.New(opts)
 	opts = opts or {}
 	local pos = {
 		x = opts.x or 0,
@@ -85,14 +85,14 @@ function Position.New(opts)
 	return pos
 end
 
-function Position.Copy(pos)
-	return Position.New({
+function PositionComponent.Copy(pos)
+	return PositionComponent.New({
 		x = pos.x,
 		y = pos.y,
 	})
 end
 
-function Position.MoveTo(pos, dir, stepSize)
+function PositionComponent.MoveTo(pos, dir, stepSize)
 	if stepSize == nil then
 		stepSize = TILE_SIZE
 	end

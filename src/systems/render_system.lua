@@ -2,7 +2,7 @@
 -- Renders entities with position and animation components
 
 local World = require("world")
-local Animation = require("components.animation")
+local AnimationComponent = require("components.animation")
 
 local RenderSystem = {}
 
@@ -13,7 +13,7 @@ function RenderSystem.DrawEntity(entity)
 		return
 	end
 
-	local sprite = Animation.GetCurrentSprite(entity.animation)
+	local sprite = AnimationComponent.GetCurrentSprite(entity.animation)
 	if sprite == nil then
 		return
 	end

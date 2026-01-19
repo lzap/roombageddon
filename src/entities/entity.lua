@@ -1,20 +1,20 @@
 -- entity --
 require("consts")
 
-local Size = require("components.size")
-local Position = require("components.position")
-local Animation = require("components.animation")
+local SizeComponent = require("components.size")
+local PositionComponent = require("components.position")
+local AnimationComponent = require("components.animation")
 
 local Entity = {}
 
 function Entity.New(opts)
 	opts = opts or {}
 	return {
-		size = opts.size or Size.New({
+		size = opts.size or SizeComponent.New({
 			width = TILE_SIZE,
 			height = TILE_SIZE,
 		}),
-		position = opts.position or Position.New({
+		position = opts.position or PositionComponent.New({
 			x = 0,
 			y = 0,
 		}),

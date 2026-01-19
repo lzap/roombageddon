@@ -1,8 +1,8 @@
 -- movement component --
 
-local Movement = {}
+local MovementComponent = {}
 
-function Movement.New(opts)
+function MovementComponent.New(opts)
 	opts = opts or {}
 	return {
 		posQueue = opts.posQueue or {}, -- FIFO queue of target positions
@@ -14,7 +14,7 @@ end
 -- Add a target position to the movement queue
 -- @param movement Movement component
 -- @param targetPos Position to move to
-function Movement.QueuePosition(movement, targetPos)
+function MovementComponent.QueuePosition(movement, targetPos)
 	table.insert(movement.posQueue, targetPos)
 	if #movement.posQueue == 1 then
 		movement.moveTimer = 0
@@ -23,9 +23,9 @@ end
 
 -- Clear the movement queue
 -- @param movement Movement component
-function Movement.ClearQueue(movement)
+function MovementComponent.ClearQueue(movement)
 	movement.posQueue = {}
 	movement.moveTimer = 0
 end
 
-return Movement
+return MovementComponent
