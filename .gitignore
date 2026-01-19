@@ -1,6 +1,7 @@
 .vscode/
-build/
-/game.lua
+/export
+/roombageddon.lua
+/roombageddon.tic
 .local/
 *.gif
 *.png

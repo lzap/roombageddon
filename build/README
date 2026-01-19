@@ -1,0 +1,4 @@
+Cartrige is kept in git because TIC-80 PRO cannot be used in GitHub Actions and
+this game needs PRO version.
+
+To rebuild the TIC cartrige, use "make build" and commit the change.

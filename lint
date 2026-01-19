@@ -19,4 +19,4 @@ if [ -z "$LUA_BIN" ]; then
     exit 1
 fi
 
-$LUA_BIN --check="$WORKSPACE"
+$LUA_BIN --check=.
