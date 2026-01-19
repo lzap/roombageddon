@@ -1,6 +1,6 @@
 -- consts --
 
-LEVEL_COUNT = 11
+LEVEL_COUNT = 13
 LEVEL_TEXT = {
 	[0] = "D-pad or arrows to move",
 	[1] = "All tiles must be cleaned",
