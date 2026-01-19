@@ -1,14 +1,12 @@
--- world --
--- ECS World: manages entities and systems
-
+-- ECS World: manages entities and systems in not very efficient way
 local World = {}
 
 -- Create a new World instance
 function World.New()
 	return {
-		entities = {}, -- Array of all entities
-		systems = {}, -- Array of systems with their update/draw functions
-		nextEntityId = 1, -- Auto-incrementing entity ID
+		entities = {},
+		systems = {},
+		nextEntityId = 1,
 	}
 end
 
@@ -36,7 +34,8 @@ function World.RemoveEntity(world, entityId)
 	end
 end
 
--- Query entities that have all specified components
+-- Query entities that have all specified components, can be slow
+-- for large number of entities
 -- @param world World instance
 -- @param componentNames Array of component names to check for
 -- @return Array of entities that have all specified components

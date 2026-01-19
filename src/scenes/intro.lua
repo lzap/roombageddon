@@ -28,9 +28,9 @@ end
 
 function IntroScene.Draw(is)
 	cls()
-	cprint("ROOMBAGEDDON", 30, COLORS.YELLOW)
-	cprint("by lzap & ozap", 40, COLORS.D_GRAY)
-	cprint("Press anything to start", 50, COLORS.D_GREEN)
+	CPrint("ROOMBAGEDDON", 30, COLORS.YELLOW)
+	CPrint("by lzap & ozap", 40, COLORS.D_GRAY)
+	CPrint("Press anything to start", 50, COLORS.D_GREEN)
 end
 
 return IntroScene

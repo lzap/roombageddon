@@ -111,7 +111,7 @@ function GameScene.Update(gs)
 	local allStuck = true
 	if #players > 0 then
 		for _, entity in ipairs(players) do
-			if not IsPlayerStuck(entity, gs.currentLevel) then
+			if not Map.IsPlayerStuck(entity, gs.currentLevel) then
 				allStuck = false
 				break
 			end

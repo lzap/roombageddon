@@ -17,14 +17,14 @@ function SFX.Process(world)
 	end
 
 	-- Check if all have no sound
-	if all(entities, function(e)
+	if All(entities, function(e)
 		return e.movement.sfx == SFX_NONE
 	end) then
 		return
 	end
 
 	-- at least one player moved
-	local hasMoved = any(entities, function(e)
+	local hasMoved = Any(entities, function(e)
 		return e.movement.sfx == SFX_MOVED
 	end)
 
@@ -34,7 +34,7 @@ function SFX.Process(world)
 	end
 
 	-- at least one player bumped
-	local hasBumped = any(entities, function(e)
+	local hasBumped = Any(entities, function(e)
 		return e.movement.sfx == SFX_BUMPED
 	end)
 

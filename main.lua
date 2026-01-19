@@ -11,15 +11,15 @@ local SceneManager = require("scenes.scene_manager")
 local IntroScene = require("scenes.intro")
 local GameScene = require("scenes.game")
 local GameOverScene = require("scenes.game_over")
---local Tools = require("tools")
+--require("tools")
 
 G = {
 	SM = {},
 }
 
 function BOOT()
-	--Tools.MarkCenters(2)
-	--Tools.SwapRows(0, 1)
+	--MarkCenters(2)
+	--SwapRows(0, 1)
 
 	local intro = IntroScene.New()
 	local game = GameScene.New()

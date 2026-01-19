@@ -183,4 +183,35 @@ function Map.isLevelComplete(level)
 	return true
 end
 
+-- Check if a player entity is stuck (cannot move in any direction)
+-- @param entity Entity with player, movement, and position components
+-- @param currentLevel Current level number for collision checking
+-- @return true if player is stuck, false otherwise
+function Map.IsPlayerStuck(entity, currentLevel)
+	if entity == nil or entity.movement == nil or entity.position == nil then
+		return false
+	end
+
+	-- Player is stuck if they're not moving and can't move in any direction
+	if #entity.movement.posQueue > 0 then
+		return false -- Player is currently moving
+	end
+
+	-- Get current grid position
+	local gridPos = entity.position // TILE_SIZE
+
+	-- Check if player can move in any direction
+	for direction = UP, RIGHT do
+		local dirData = DIRS[direction]
+		local targetGridPos = gridPos + dirData
+
+		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
+			return false -- Can move in at least one direction
+		end
+	end
+
+	-- Cannot move in any direction
+	return true
+end
+
 return Map
