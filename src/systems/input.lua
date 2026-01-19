@@ -2,26 +2,13 @@
 -- Processes input and queues movement requests
 
 require("consts")
+require("common")
 local World = require("world")
 local PositionComponent = require("components.position")
 local MovementComponent = require("components.movement")
 local Map = require("services.map")
 
 local InputSystem = {}
-
--- Helper function to convert direction to rotation
-local function directionToRotation(direction)
-	if direction == UP then
-		return ROTATE_270
-	elseif direction == DOWN then
-		return ROTATE_90
-	elseif direction == LEFT then
-		return ROTATE_180
-	elseif direction == RIGHT then
-		return ROTATE_NONE
-	end
-	return ROTATE_NONE
-end
 
 -- Process input for a single entity
 -- @param entity Entity with input and movement components
@@ -70,7 +57,7 @@ function InputSystem.ProcessEntity(entity, currentLevel)
 		input.lastDirection = newDirection
 
 		-- Update entity rotation
-		entity.rotate = directionToRotation(newDirection)
+		entity.rotate = DirectionToRotation(newDirection)
 
 		-- Check if movement is valid
 		local targetGridPos = endGridPos + dirData

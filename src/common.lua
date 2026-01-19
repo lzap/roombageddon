@@ -1,3 +1,5 @@
+require("consts")
+
 -- debug helper --
 --- Recursively converts a value to a string representation.
 -- @param o The value to dump (table, number, string, etc.)
@@ -55,3 +57,18 @@ function All(t, fn)
 	return true
 end
 
+-- Convert direction to rotation (assuming base direction is RIGHT)
+-- @param direction Direction constant (UP, DOWN, LEFT, RIGHT)
+-- @return Rotation constant (ROTATE_NONE, ROTATE_90, ROTATE_180, ROTATE_270)
+function DirectionToRotation(direction)
+	if direction == UP then
+		return ROTATE_270
+	elseif direction == DOWN then
+		return ROTATE_90
+	elseif direction == LEFT then
+		return ROTATE_180
+	elseif direction == RIGHT then
+		return ROTATE_NONE
+	end
+	return ROTATE_NONE
+end
