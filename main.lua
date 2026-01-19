@@ -14,7 +14,7 @@ local GameOverScene = require("scenes.game_over")
 --require("tools")
 
 G = {
-	SM = {},
+	Director = {},
 }
 
 function BOOT()
@@ -25,27 +25,27 @@ function BOOT()
 	local game = GameScene.New()
 	local gameOver = GameOverScene.New()
 
-	G.SM = Director.New()
-	Director.Add(G.SM, "intro", intro, {
+	G.Director = Director.New()
+	Director.Add(G.Director, "intro", intro, {
 		onEnter = IntroScene.OnEnter,
 		update = IntroScene.Update,
 		draw = IntroScene.Draw,
 	})
-	Director.Add(G.SM, "game", game, {
+	Director.Add(G.Director, "game", game, {
 		onEnter = GameScene.OnEnter,
 		update = GameScene.Update,
 		draw = GameScene.Draw,
 	})
-	Director.Add(G.SM, "game_over", gameOver, {
+	Director.Add(G.Director, "game_over", gameOver, {
 		update = GameOverScene.Update,
 		draw = GameOverScene.Draw,
 	})
-	Director.Switch(G.SM, "intro")
+	Director.Switch(G.Director, "intro")
 end
 
 function TIC()
-	Director.Update(G.SM)
-	Director.Draw(G.SM)
+	Director.Update(G.Director)
+	Director.Draw(G.Director)
 end
 
 -- <TILES>

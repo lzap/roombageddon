@@ -47,8 +47,7 @@ function IntroScene.Update(is)
 	end
 
 	if keyPressed or buttonPressed then
-		local sm = G.SM
-		Director.Switch(sm, "game")
+		Director.Switch(G.Director, "game")
 	end
 end
 

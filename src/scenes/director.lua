@@ -10,32 +10,32 @@ function Director.New()
 	}
 end
 
-function Director.Add(sm, name, sceneData, handlers)
-	sm.scenes[name] = sceneData
-	sm.handlers[name] = handlers
+function Director.Add(d, name, sceneData, handlers)
+	d.scenes[name] = sceneData
+	d.handlers[name] = handlers
 end
 
-function Director.Switch(sm, name)
-	if sm.current ~= name then
-		if sm.current and sm.handlers[sm.current] and sm.handlers[sm.current].onExit then
-			sm.handlers[sm.current].onExit(sm.scenes[sm.current])
+function Director.Switch(d, name)
+	if d.current ~= name then
+		if d.current and d.handlers[d.current] and d.handlers[d.current].onExit then
+			d.handlers[d.current].onExit(d.scenes[d.current])
 		end
-		sm.current = name
-		if sm.handlers[name] and sm.handlers[name].onEnter then
-			sm.handlers[name].onEnter(sm.scenes[name])
+		d.current = name
+		if d.handlers[name] and d.handlers[name].onEnter then
+			d.handlers[name].onEnter(d.scenes[name])
 		end
 	end
 end
 
-function Director.Update(sm)
-	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].update then
-		sm.handlers[sm.current].update(sm.scenes[sm.current])
+function Director.Update(d)
+	if d.current and d.scenes[d.current] and d.handlers[d.current] and d.handlers[d.current].update then
+		d.handlers[d.current].update(d.scenes[d.current])
 	end
 end
 
-function Director.Draw(sm)
-	if sm.current and sm.scenes[sm.current] and sm.handlers[sm.current] and sm.handlers[sm.current].draw then
-		sm.handlers[sm.current].draw(sm.scenes[sm.current])
+function Director.Draw(d)
+	if d.current and d.scenes[d.current] and d.handlers[d.current] and d.handlers[d.current].draw then
+		d.handlers[d.current].draw(d.scenes[d.current])
 	end
 end
 

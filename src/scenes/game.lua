@@ -104,8 +104,7 @@ function GameScene.Update(gs)
 
 	if Map.isLevelComplete(gs.currentLevel) or (btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.RIGHT)) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
-			local sm = G.SM
-			Director.Switch(sm, "game_over")
+			Director.Switch(G.Director, "game_over")
 		else
 			GameScene.LoadLevel(gs, gs.currentLevel + 1)
 		end
