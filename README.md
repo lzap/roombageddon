@@ -2,6 +2,14 @@
 
 A TIC-80 game by Lukáš `lzap` Zapletal & Ondra `ozap` Zapletal.
 
+### HOW TO PLAY
+
+* Use D-Pad or keyboard arrows to move the robot.
+* Robot cleans the floor but will not enter already cleaned tiles.
+* You control multiple robots at once.
+* Solve all levels.
+* When you get stuck, press `(A)` or key `X` to reset the level
+
 ### TODO
 
 * Sort levels

@@ -131,6 +131,10 @@ function Map.loadLevel(level)
 	-- Store original map state if not already stored
 	Map.storeOriginalMap(level)
 
+	-- Restore original map state before finding player positions
+	-- This ensures we can find player sprites even if the map was modified
+	Map.restoreOriginalMap(level)
+
 	-- Replace center markers (tiles with bit 2 set) with sprite 0
 	Map.replaceCenterMarkers(level)
 	-- Find player positions in the level

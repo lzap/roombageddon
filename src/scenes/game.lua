@@ -12,6 +12,7 @@ local RenderSystem = require("systems.render")
 local AnimationSystem = require("systems.animation")
 local InputSystem = require("systems.input")
 local MovementSystem = require("systems.movement")
+local InputComponent = require("components.input")
 
 local GameScene = {}
 
@@ -85,28 +86,37 @@ function GameScene.Update(gs)
 	SoundSystem.Update(gs.world)
 	HUD.Update(gs.hud)
 
-	local allStuck = #players > 0 and All(players, function(entity)
-		return Map.isPlayerStuck(entity, gs.currentLevel)
-	end)
+	local allStuck = #players > 0
+		and All(players, function(entity)
+			return Map.isPlayerStuck(entity, gs.currentLevel)
+		end)
 
 	if allStuck then
-		HUD.SetText(gs.hud, "You suck, you're STUCK! Press B.")
+		local buttonText = InputComponent.ButtonText(BUTTONS.B)
+		HUD.SetText(gs.hud, "You suck, you're STUCK! Press " .. buttonText .. ".")
 		HUD.Blink(gs.hud, true)
 	end
 
-	-- Reset level
 	if btnp(BUTTONS.B) then
 		Map.restoreOriginalMap(gs.currentLevel)
 		GameScene.LoadLevel(gs, gs.currentLevel)
 	end
 
-	if Map.isLevelComplete(gs.currentLevel) or btnp(BUTTONS.A) then
+	if Map.isLevelComplete(gs.currentLevel) or (btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.RIGHT)) then
 		if gs.currentLevel >= LEVEL_COUNT - 1 then
 			local sm = G.SM
 			Director.Switch(sm, "game_over")
 		else
 			GameScene.LoadLevel(gs, gs.currentLevel + 1)
 		end
+	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.LEFT) then
+		GameScene.LoadLevel(gs, gs.currentLevel - 1)
+	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.UP) then
+		local newLevel = gs.currentLevel - MAPS_PER_ROW
+		GameScene.LoadLevel(gs, newLevel)
+	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.DOWN) then
+		local newLevel = gs.currentLevel + MAPS_PER_ROW
+		GameScene.LoadLevel(gs, newLevel)
 	end
 end
 

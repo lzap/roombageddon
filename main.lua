@@ -27,6 +27,7 @@ function BOOT()
 
 	G.SM = Director.New()
 	Director.Add(G.SM, "intro", intro, {
+		onEnter = IntroScene.OnEnter,
 		update = IntroScene.Update,
 		draw = IntroScene.Draw,
 	})
