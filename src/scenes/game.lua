@@ -10,13 +10,17 @@ local SFX = require("services.sfx")
 local World = require("world")
 local RenderSystem = require("systems.render_system")
 local AnimationSystem = require("systems.animation_system")
+local InputSystem = require("systems.input_system")
+local MovementSystem = require("systems.movement_system")
 
 local GameScene = {}
 
 function GameScene.New()
 	local world = World.New()
 	
-	-- Register Systems
+	-- Register Systems (order matters: input -> movement -> animation -> render)
+	World.AddSystem(world, InputSystem)
+	World.AddSystem(world, MovementSystem)
 	World.AddSystem(world, AnimationSystem)
 	World.AddSystem(world, RenderSystem)
 	
@@ -31,6 +35,9 @@ end
 function GameScene.LoadLevel(gs, level)
 	local playerPositions, clampedLevel = Map.loadLevel(level)
 	gs.currentLevel = clampedLevel
+	
+	-- Store current level in world for systems to access
+	gs.world.currentLevel = clampedLevel
 
 	-- Clear existing players and world entities
 	gs.players = {}
@@ -83,11 +90,18 @@ function GameScene.OnEnter(gs)
 end
 
 function GameScene.Update(gs)
-	-- Update all systems (including AnimationSystem)
+	-- Update world's current level
+	gs.world.currentLevel = gs.currentLevel
+	
+	-- Update all systems (InputSystem -> MovementSystem -> AnimationSystem)
 	World.Update(gs.world)
 	
-	-- Update all players
+	-- Update player entities' current level (for systems to access)
 	for _, p in ipairs(gs.players) do
+		if p.entity then
+			p.entity.currentLevel = gs.currentLevel
+		end
+		-- Legacy: still call Player.Update for any remaining logic
 		Player.Update(p, gs.currentLevel)
 	end
 

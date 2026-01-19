@@ -4,23 +4,11 @@ require("consts")
 local Entity = require("entities.entity")
 local Position = require("components.position")
 local Animation = require("components.animation")
+local Input = require("components.input")
+local Movement = require("components.movement")
 local Map = require("services.map")
 
 local Player = {}
-
--- Helper function to convert direction to rotation
-local function directionToRotation(direction)
-	if direction == UP then
-		return ROTATE_270
-	elseif direction == DOWN then
-		return ROTATE_90
-	elseif direction == LEFT then
-		return ROTATE_180
-	elseif direction == RIGHT then
-		return ROTATE_NONE
-	end
-	return ROTATE_NONE -- Default to RIGHT
-end
 
 function Player.New(opts)
 	opts = opts or {}
@@ -38,7 +26,19 @@ function Player.New(opts)
 	-- Use configurable sprites, default to {256, 257}
 	local sprites = opts.sprites or { 256, 257 }
 
-	-- Convert direction to rotation
+	-- Convert direction to rotation (helper function)
+	local function directionToRotation(direction)
+		if direction == UP then
+			return ROTATE_270
+		elseif direction == DOWN then
+			return ROTATE_90
+		elseif direction == LEFT then
+			return ROTATE_180
+		elseif direction == RIGHT then
+			return ROTATE_NONE
+		end
+		return ROTATE_NONE
+	end
 	local initialRotation = directionToRotation(initialDirection)
 
 	-- Create animation component
@@ -54,116 +54,61 @@ function Player.New(opts)
 		frameTime = 0,
 	})
 
-	-- Create entity with player-specific animation
+	-- Create input component
+	local input = Input.New({
+		playerNumber = playerNumber,
+		lastDirection = initialDirection,
+	})
+
+	-- Create movement component
+	local movement = Movement.New({
+		playerNumber = playerNumber,
+		posQueue = {},
+		moveTimer = 0,
+		sfx = SFX_NONE,
+	})
+
+	-- Create entity with player-specific components
 	local ent = Entity.New({
 		position = pos,
 		animation = animation,
+		input = input,
+		movement = movement,
 		keyColor = opts.keyColor or 0,
 		rotate = initialRotation,
+		currentLevel = opts.currentLevel or 0,
 	})
 
 	return {
 		entity = ent,
 		playerNumber = playerNumber,
 		currentLevel = opts.currentLevel or 0,
-		lastDirection = initialDirection,
-		posQueue = {}, -- FIFO queue of target positions
-		moveTimer = 0, -- Frames counter for pixel movement
-		sfx = SFX_NONE, -- For simplicity directly set the SFX flag
 	}
 end
 
 function Player.Update(p, currentLevel)
-	-- Note: Animation is now handled by AnimationSystem via World.Update()
-	-- Entity.Update() is deprecated
-
-	-- Reset SFX flag at start of update
-	p.sfx = SFX_NONE
-	-- Get current grid position
-	local gridPos = p.entity.position // TILE_SIZE
-
-	-- Calculate grid position at the end of the queue (where player will be after all queued moves)
-	local endGridPos = gridPos
-
-	-- If there are queued positions, use the last one in the queue
-	if #p.posQueue > 0 then
-		endGridPos = p.posQueue[#p.posQueue] // TILE_SIZE
-	end
-
-	-- Handle input: add target positions to queue
-	local dirData = nil
-	if btnp(BUTTONS.RIGHT) then
-		p.entity.rotate = ROTATE_NONE
-		p.lastDirection = RIGHT
-		dirData = DIRS[RIGHT]
-	elseif btnp(BUTTONS.DOWN) then
-		p.entity.rotate = ROTATE_90
-		p.lastDirection = DOWN
-		dirData = DIRS[DOWN]
-	elseif btnp(BUTTONS.LEFT) then
-		p.entity.rotate = ROTATE_180
-		p.lastDirection = LEFT
-		dirData = DIRS[LEFT]
-	elseif btnp(BUTTONS.UP) then
-		p.entity.rotate = ROTATE_270
-		p.lastDirection = UP
-		dirData = DIRS[UP]
-	end
-
-	-- If input detected, add target position to queue
-	if dirData then
-		local targetGridPos = endGridPos + dirData
-		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
-			table.insert(p.posQueue, targetGridPos * TILE_SIZE)
-			if #p.posQueue == 1 then
-				p.moveTimer = 0
-			end
-			p.sfx = SFX_MOVED -- Mark as successfully moved
-		else
-			p.sfx = SFX_BUMPED -- Mark as bumped into wall
-		end
-	end
-
-	-- Move pixel by pixel towards first target in queue
-	if #p.posQueue > 0 then
-		local currentTarget = p.posQueue[1]
-		p.moveTimer = p.moveTimer + 1
-
-		if p.moveTimer >= MOVE_SPEED then
-			p.moveTimer = 0
-
-			-- Calculate direction to target
-			local diff = currentTarget - p.entity.position
-
-			-- Calculate normalized step (1 pixel in the direction of target)
-			local step = Position.New({
-				x = diff.x ~= 0 and (diff.x > 0 and 1 or -1) or 0,
-				y = diff.y ~= 0 and (diff.y > 0 and 1 or -1) or 0,
-			})
-
-			-- Move one pixel towards target
-			p.entity.position = p.entity.position + step
-
-			-- Check if we've reached the target
-			if p.entity.position == currentTarget then
-				-- Mark this position as visited
-				local targetGridPos = currentTarget // TILE_SIZE
-				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, p.playerNumber)
-
-				-- Remove completed target from queue
-				table.remove(p.posQueue, 1)
-			end
-		end
+	-- Note: Input and Movement are now handled by InputSystem and MovementSystem via World.Update()
+	-- This function is kept for backward compatibility but does nothing
+	-- Update entity's current level
+	if p.entity then
+		p.entity.currentLevel = currentLevel
 	end
 end
 
 function Player.Sound(p)
-	return p.sfx
+	if p.entity and p.entity.movement then
+		return p.entity.movement.sfx
+	end
+	return SFX_NONE
 end
 
 function Player.IsStuck(p, currentLevel)
+	if p.entity == nil or p.entity.movement == nil or p.entity.position == nil then
+		return false
+	end
+
 	-- Player is stuck if they're not moving and can't move in any direction
-	if #p.posQueue > 0 then
+	if #p.entity.movement.posQueue > 0 then
 		return false -- Player is currently moving
 	end
 
