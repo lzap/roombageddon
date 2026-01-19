@@ -40,7 +40,7 @@ function GameScene.LoadLevel(gs, level)
 
 		-- Mark starting position as visited
 		local startPos = Position.New({ x = posData.x, y = posData.y })
-		local startGridPos = Position.Floor(startPos, TILE_SIZE)
+		local startGridPos = startPos // TILE_SIZE
 		Map.markVisited(clampedLevel, startGridPos.x, startGridPos.y, posData.playerNumber)
 	end
 

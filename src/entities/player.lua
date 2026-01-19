@@ -73,14 +73,14 @@ function Player.Update(p, currentLevel)
 	-- Reset SFX flag at start of update
 	p.sfx = SFX_NONE
 	-- Get current grid position
-	local gridPos = Position.Floor(p.entity.position, TILE_SIZE)
+	local gridPos = p.entity.position // TILE_SIZE
 
 	-- Calculate grid position at the end of the queue (where player will be after all queued moves)
 	local endGridPos = gridPos
 
 	-- If there are queued positions, use the last one in the queue
 	if #p.posQueue > 0 then
-		endGridPos = Position.Floor(p.posQueue[#p.posQueue], TILE_SIZE)
+		endGridPos = p.posQueue[#p.posQueue] // TILE_SIZE
 	end
 
 	-- Handle input: add target positions to queue
@@ -140,7 +140,7 @@ function Player.Update(p, currentLevel)
 			-- Check if we've reached the target
 			if p.entity.position == currentTarget then
 				-- Mark this position as visited
-				local targetGridPos = Position.Floor(currentTarget, TILE_SIZE)
+				local targetGridPos = currentTarget // TILE_SIZE
 				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, p.playerNumber)
 
 				-- Remove completed target from queue
@@ -161,7 +161,7 @@ function Player.IsStuck(p, currentLevel)
 	end
 
 	-- Get current grid position
-	local gridPos = Position.Floor(p.entity.position, TILE_SIZE)
+	local gridPos = p.entity.position // TILE_SIZE
 
 	-- Check if player can move in any direction
 	for direction = UP, RIGHT do

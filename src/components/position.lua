@@ -54,6 +54,16 @@ local positionMetatable = {
 		end
 	end,
 
+	-- Floor division: Position // scalar
+	__idiv = function(a, b)
+		if type(b) == "number" then
+			return Position.New({ x = math.floor(a.x / b), y = math.floor(a.y / b) })
+		else
+			-- Position // Position (component-wise floor division)
+			return Position.New({ x = math.floor(a.x / (b.x or 1)), y = math.floor(a.y / (b.y or 1)) })
+		end
+	end,
+
 	-- Unary minus: -Position
 	__unm = function(a)
 		return Position.New({ x = -a.x, y = -a.y })
@@ -89,14 +99,6 @@ function Position.MoveTo(pos, dir, stepSize)
 	local offset = dir * stepSize
 	pos.x = pos.x + offset.x
 	pos.y = pos.y + offset.y
-end
-
-function Position.Floor(pos, divisor)
-	divisor = divisor or 1
-	return Position.New({
-		x = math.floor(pos.x / divisor),
-		y = math.floor(pos.y / divisor),
-	})
 end
 
 return Position

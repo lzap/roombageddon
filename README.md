@@ -1,6 +1,6 @@
 # ROOMBAGEDDON
 
-A TIC-80 game by Lukáš Zapletal aka `lzap`.
+A TIC-80 game by Lukáš `lzap` Zapletal & Ondra `ozap` Zapletal.
 
 ## Requirements
 
