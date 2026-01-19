@@ -31,22 +31,16 @@ jobs:
 
       - name: Build and Export Game
         run: |
-          mkdir -p build
-          xvfb-run --auto-servernum make build TIC80=tic80
-          if [ ! -f build/roombageddon.zip ]; then
+          xvfb-run --auto-servernum make export TIC80=tic80
+          if [ ! -f export/roombageddon.zip ]; then
             echo "Error: Export failed, no zip produced!"
             exit 1
           fi
 
       - name: Extract ZIP for GitHub Pages
         run: |
-          # 1. The export command creates build/roombageddon.zip
-          # 2. We unzip it into a clean directory 'dist'
           mkdir -p dist
-          unzip build/roombageddon.zip -d dist/
-          
-          # 3. Check if TIC-80 nested it (sometimes it creates a subfolder inside the zip)
-          # If it did, move contents to the root of 'dist'
+          unzip export/roombageddon.zip -d dist/
           if [ -d dist/roombageddon ]; then
             mv dist/roombageddon/* dist/
             rm -rf dist/roombageddon
