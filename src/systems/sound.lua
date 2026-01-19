@@ -1,15 +1,13 @@
--- sfx --
 require("consts")
 require("common")
 
 local World = require("world")
 
-local SFX = {}
+local SoundSystem = {}
 
--- Process player movement sounds
+-- Update sound effects for all entities in the world
 -- @param world World instance
-function SFX.Process(world)
-	-- Query entities with movement components
+function SoundSystem.Update(world)
 	local entities = World.Query(world, { "movement" })
 
 	if #entities == 0 then
@@ -43,11 +41,4 @@ function SFX.Process(world)
 	end
 end
 
--- Legacy function for backward compatibility (deprecated)
--- @param players Array of player objects (deprecated)
-function SFX.ProcessPlayers(players)
-	-- This function is deprecated. Use SFX.Process(world) instead.
-	-- Kept for backward compatibility only.
-end
-
-return SFX
+return SoundSystem

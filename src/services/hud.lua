@@ -1,4 +1,3 @@
--- hud service --
 require("consts")
 
 local HUD = {}

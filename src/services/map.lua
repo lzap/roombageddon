@@ -1,11 +1,44 @@
--- map --
 require("consts")
 
 local PositionComponent = require("components.position")
 local Map = {}
 
--- Cache to store original map states for each level
+-- Cache to store original map states for each level for reset functionality
 local originalMapCache = {}
+
+-- Visited sprite base (P1=32, P2=33, P3=34, P4=35)
+local VISITED_SPRITE_BASE = 31
+
+-- Helper: Clamp level to valid range [0, MAX_LEVELS-1]
+local function clampLevel(level)
+	return math.max(0, math.min(level, MAX_LEVELS - 1))
+end
+
+-- Helper: Check if grid coordinates are within bounds
+local function isInBounds(gridX, gridY)
+	return gridX >= 0 and gridX < MAP_WIDTH and gridY >= 0 and gridY < MAP_HEIGHT
+end
+
+-- Helper: Extract player info from sprite ID
+local function getPlayerInfoFromSprite(spriteId)
+	local spriteRanges = {
+		{ base = PLAYER_SPRITE_UP, direction = UP },
+		{ base = PLAYER_SPRITE_DOWN, direction = DOWN },
+		{ base = PLAYER_SPRITE_LEFT, direction = LEFT },
+		{ base = PLAYER_SPRITE_RIGHT, direction = RIGHT },
+	}
+
+	for _, range in ipairs(spriteRanges) do
+		if spriteId >= range.base and spriteId <= range.base + 3 then
+			return {
+				playerNumber = spriteId - range.base + 1,
+				direction = range.direction,
+			}
+		end
+	end
+
+	return nil
+end
 
 -- Calculate map coordinates for a given level number (0-63)
 function Map.getCoords(level)
@@ -21,35 +54,15 @@ function Map.findPlayerPositions(level)
 	local mapX, mapY = Map.getCoords(level)
 	local positions = {}
 
-	-- Scan the entire level map for player position sprites
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
 			local spriteId = mget(mapX + x, mapY + y)
-			local playerNum = nil
-			local direction = nil
+			local playerInfo = getPlayerInfoFromSprite(spriteId)
 
-			-- Check UP sprites (64-67)
-			if spriteId >= PLAYER_SPRITE_UP and spriteId <= PLAYER_SPRITE_UP + 3 then
-				playerNum = spriteId - PLAYER_SPRITE_UP + 1
-				direction = UP
-			-- Check DOWN sprites (80-83)
-			elseif spriteId >= PLAYER_SPRITE_DOWN and spriteId <= PLAYER_SPRITE_DOWN + 3 then
-				playerNum = spriteId - PLAYER_SPRITE_DOWN + 1
-				direction = DOWN
-			-- Check LEFT sprites (96-99)
-			elseif spriteId >= PLAYER_SPRITE_LEFT and spriteId <= PLAYER_SPRITE_LEFT + 3 then
-				playerNum = spriteId - PLAYER_SPRITE_LEFT + 1
-				direction = LEFT
-			-- Check RIGHT sprites (112-115)
-			elseif spriteId >= PLAYER_SPRITE_RIGHT and spriteId <= PLAYER_SPRITE_RIGHT + 3 then
-				playerNum = spriteId - PLAYER_SPRITE_RIGHT + 1
-				direction = RIGHT
-			end
-
-			if playerNum then
+			if playerInfo then
 				table.insert(positions, {
-					playerNumber = playerNum,
-					direction = direction,
+					playerNumber = playerInfo.playerNumber,
+					direction = playerInfo.direction,
 					x = x * TILE_SIZE,
 					y = y * TILE_SIZE,
 				})
@@ -62,15 +75,12 @@ end
 
 -- Store original map state for a level
 function Map.storeOriginalMap(level)
-	-- Clamp level to valid range
-	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+	level = clampLevel(level)
 
-	-- Only store if not already cached
 	if not originalMapCache[level] then
 		local mapX, mapY = Map.getCoords(level)
 		local tiles = {}
 
-		-- Store all tiles in the level
 		for y = 0, MAP_HEIGHT - 1 do
 			for x = 0, MAP_WIDTH - 1 do
 				local spriteId = mget(mapX + x, mapY + y)
@@ -84,15 +94,12 @@ end
 
 -- Restore original map state for a level
 function Map.restoreOriginalMap(level)
-	-- Clamp level to valid range
-	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+	level = clampLevel(level)
 
-	-- Only restore if we have a cached state
 	if originalMapCache[level] then
 		local mapX, mapY = Map.getCoords(level)
 		local tiles = originalMapCache[level]
 
-		-- Restore all tiles in the level
 		for y = 0, MAP_HEIGHT - 1 do
 			for x = 0, MAP_WIDTH - 1 do
 				local spriteId = tiles[y * MAP_WIDTH + x]
@@ -106,13 +113,10 @@ end
 function Map.replaceCenterMarkers(level)
 	local mapX, mapY = Map.getCoords(level)
 
-	-- Scan all tiles in the level
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
 			local spriteId = mget(mapX + x, mapY + y)
-			-- Check if sprite flag 2 (bit 2) is set
 			if fget(spriteId, 2) then
-				-- Replace with sprite 0
 				mset(mapX + x, mapY + y, 0)
 			end
 		end
@@ -122,8 +126,7 @@ end
 -- Load a level: scan for player positions and return them
 -- TODO: drop MAX_LEVELS and figure out next level by scanning the map for player positions
 function Map.loadLevel(level)
-	-- Clamp level to valid range
-	level = math.max(0, math.min(level, MAX_LEVELS - 1))
+	level = clampLevel(level)
 
 	-- Store original map state if not already stored
 	Map.storeOriginalMap(level)
@@ -136,8 +139,7 @@ end
 
 -- Check if a tile is walkable (bit 0 must not be set)
 function Map.canMoveTo(level, gridX, gridY)
-	-- Check bounds
-	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
+	if not isInBounds(gridX, gridY) then
 		return false
 	end
 
@@ -155,14 +157,12 @@ end
 
 -- Mark a tile as visited with the appropriate sprite (32-35 for P1-P4)
 function Map.markVisited(level, gridX, gridY, playerNumber)
-	-- Check bounds
-	if gridX < 0 or gridX >= MAP_WIDTH or gridY < 0 or gridY >= MAP_HEIGHT then
+	if not isInBounds(gridX, gridY) then
 		return
 	end
 
 	local mapX, mapY = Map.getCoords(level)
-	-- Sprite 32 for P1, 33 for P2, 34 for P3, 35 for P4
-	local visitedSprite = 31 + playerNumber
+	local visitedSprite = VISITED_SPRITE_BASE + playerNumber
 	mset(mapX + gridX, mapY + gridY, visitedSprite)
 end
 
@@ -170,12 +170,9 @@ end
 function Map.isLevelComplete(level)
 	local mapX, mapY = Map.getCoords(level)
 
-	-- Scan all tiles in the level
 	for y = 0, MAP_HEIGHT - 1 do
 		for x = 0, MAP_WIDTH - 1 do
 			local spriteId = mget(mapX + x, mapY + y)
-			-- Check if sprite flag 1 (bit 1) is set
-			-- Use fget to check sprite flags
 			if fget(spriteId, 1) then
 				return false
 			end
@@ -189,30 +186,25 @@ end
 -- @param entity Entity with player, movement, and position components
 -- @param currentLevel Current level number for collision checking
 -- @return true if player is stuck, false otherwise
-function Map.IsPlayerStuck(entity, currentLevel)
+function Map.isPlayerStuck(entity, currentLevel)
 	if entity == nil or entity.movement == nil or entity.position == nil then
 		return false
 	end
 
-	-- Player is stuck if they're not moving and can't move in any direction
 	if #entity.movement.posQueue > 0 then
-		return false -- Player is currently moving
+		return false
 	end
 
-	-- Get current grid position
 	local gridPos = entity.position // TILE_SIZE
-
-	-- Check if player can move in any direction
 	for direction = UP, RIGHT do
 		local dirData = DIRS[direction]
 		local targetGridPos = gridPos + dirData
 
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
-			return false -- Can move in at least one direction
+			return false
 		end
 	end
 
-	-- Cannot move in any direction
 	return true
 end
 

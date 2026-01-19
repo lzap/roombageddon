@@ -6,7 +6,7 @@ local PositionComponent = require("components.position")
 local Map = require("services.map")
 local Director = require("scenes.director")
 local HUD = require("services.hud")
-local SFX = require("services.sfx")
+local SoundSystem = require("systems.sound")
 local World = require("world")
 local RenderSystem = require("systems.render")
 local AnimationSystem = require("systems.animation")
@@ -82,11 +82,11 @@ function GameScene.Update(gs)
 		entity.currentLevel = gs.currentLevel
 	end
 
-	SFX.Process(gs.world)
+	SoundSystem.Update(gs.world)
 	HUD.Update(gs.hud)
 
 	local allStuck = #players > 0 and All(players, function(entity)
-		return Map.IsPlayerStuck(entity, gs.currentLevel)
+		return Map.isPlayerStuck(entity, gs.currentLevel)
 	end)
 
 	if allStuck then
