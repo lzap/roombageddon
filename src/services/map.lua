@@ -118,7 +118,9 @@ function Map.replaceCenterMarkers(level)
 		end
 	end
 end
+
 -- Load a level: scan for player positions and return them
+-- TODO: drop MAX_LEVELS and figure out next level by scanning the map for player positions
 function Map.loadLevel(level)
 	-- Clamp level to valid range
 	level = math.max(0, math.min(level, MAX_LEVELS - 1))

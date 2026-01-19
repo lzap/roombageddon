@@ -1,4 +1,3 @@
--- intro scene --
 require("consts")
 require("common")
 

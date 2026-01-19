@@ -1,4 +1,3 @@
--- game over scene --
 require("consts")
 require("common")
 
@@ -9,7 +8,7 @@ function GameOverScene.New()
 end
 
 function GameOverScene.Update(gos)
-	-- Could add input handling here if needed
+	-- TODO add "final" level with 99 randomly placed players (pseudo generator)
 end
 
 function GameOverScene.Draw(gos)
