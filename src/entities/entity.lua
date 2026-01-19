@@ -9,7 +9,7 @@ local Entity = {}
 
 function Entity.New(opts)
 	opts = opts or {}
-	return {
+	local entity = {
 		size = opts.size or SizeComponent.New({
 			width = TILE_SIZE,
 			height = TILE_SIZE,
@@ -22,6 +22,15 @@ function Entity.New(opts)
 		keyColor = opts.keyColor or 0,
 		rotate = opts.rotate or 0,
 	}
+
+	-- Pass through any additional components/fields from opts
+	for key, value in pairs(opts) do
+		if entity[key] == nil then
+			entity[key] = value
+		end
+	end
+
+	return entity
 end
 
 -- Note: Entity.Update() and Entity.Draw() have been removed.

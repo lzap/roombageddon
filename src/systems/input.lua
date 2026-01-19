@@ -50,16 +50,16 @@ function InputSystem.ProcessEntity(entity, currentLevel)
 	local dirData = nil
 	local newDirection = nil
 
-	if btnp(BUTTONS.RIGHT) then
+	if btnp(RIGHT) then
 		newDirection = RIGHT
 		dirData = DIRS[RIGHT]
-	elseif btnp(BUTTONS.DOWN) then
+	elseif btnp(DOWN) then
 		newDirection = DOWN
 		dirData = DIRS[DOWN]
-	elseif btnp(BUTTONS.LEFT) then
+	elseif btnp(LEFT) then
 		newDirection = LEFT
 		dirData = DIRS[LEFT]
-	elseif btnp(BUTTONS.UP) then
+	elseif btnp(UP) then
 		newDirection = UP
 		dirData = DIRS[UP]
 	end
@@ -95,9 +95,7 @@ function InputSystem.Update(world)
 	-- Query entities that have input and movement components
 	local entities = World.Query(world, { "input", "movement", "position" })
 
-	-- Get current level from world (stored as a property)
-	-- For now, we'll need to pass it differently or store it in world
-	-- Let's check if entities have a level property or if we need to add it
+	-- Get current level from world
 	local currentLevel = world.currentLevel or 0
 
 	for _, entity in ipairs(entities) do
