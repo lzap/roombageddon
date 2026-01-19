@@ -9,6 +9,7 @@ GAME_NAME := roombageddon
 BUILD_DIR := build
 EXPORT_DIR := export
 SRC_DIR := src
+TIC := $(BUILD_DIR)/$(GAME_NAME).tic
 
 SOURCES := $(shell find . -type f -name "*.lua")
 TABLES := $(shell find ./$(SRC_DIR) -type f -name "*.lua" | sed -e "s/^\.\/$(SRC_DIR)\/// ; s/\.lua$$// ; s/\//\./g")
@@ -24,13 +25,13 @@ lint:
 
 build: $(SOURCES)
 	@mkdir -p $(BUILD_DIR)
-	@rm -f $(BUILD_DIR)/$(GAME_NAME).tic
+	@rm -f $(TIC)
 	$(LUACC) -o $(GAME_NAME).lua -p 6 -i ./ -i ./$(SRC_DIR) main $(TABLES)
-	$(TIC80) --skip --fs=. --cli --cmd="load $(GAME_NAME).lua & save $(BUILD_DIR)/$(GAME_NAME).tic & exit"
+	$(TIC80) --skip --fs=. --cli --cmd="load $(GAME_NAME).lua & save $(TIC) & exit"
 
 export:
 	@mkdir -p $(EXPORT_DIR)
-	$(TIC80) --skip --fs=. --cli --cmd="load $(GAME_NAME).lua & export html $(EXPORT_DIR)/$(GAME_NAME) & exit"
+	$(TIC80) --skip --fs=. --cli --cmd="load $(TIC) & export html $(EXPORT_DIR)/$(GAME_NAME) & exit"
 
 clean:
 	@rm -rf $(EXPORT_DIR) $(GAME_NAME).lua $(GAME_NAME).tic

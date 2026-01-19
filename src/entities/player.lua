@@ -63,12 +63,15 @@ function Player.New(opts)
 		lastDirection = initialDirection,
 		posQueue = {}, -- FIFO queue of target positions
 		moveTimer = 0, -- Frames counter for pixel movement
+		sfx = SFX_NONE, -- For simplicity directly set the SFX flag
 	}
 end
 
 function Player.Update(p, currentLevel)
 	Entity.Update(p.entity)
 
+	-- Reset SFX flag at start of update
+	p.sfx = SFX_NONE
 	-- Get current grid position
 	local gridPos = Position.Floor(p.entity.position, TILE_SIZE)
 
@@ -103,15 +106,14 @@ function Player.Update(p, currentLevel)
 	-- If input detected, add target position to queue
 	if dirData then
 		local targetGridPos = endGridPos + dirData
-
-		-- Check if movement is allowed (not blocked by bit 0)
 		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
-			-- Add target position to queue
 			table.insert(p.posQueue, targetGridPos * TILE_SIZE)
-			-- Initialize move timer when starting to move
 			if #p.posQueue == 1 then
 				p.moveTimer = 0
 			end
+			p.sfx = SFX_MOVED -- Mark as successfully moved
+		else
+			p.sfx = SFX_BUMPED -- Mark as bumped into wall
 		end
 	end
 
@@ -146,6 +148,10 @@ function Player.Update(p, currentLevel)
 			end
 		end
 	end
+end
+
+function Player.Sound(p)
+	return p.sfx
 end
 
 function Player.IsStuck(p, currentLevel)

@@ -6,6 +6,7 @@ local Position = require("components.position")
 local Map = require("services.map")
 local SceneManager = require("scenes.scene_manager")
 local HUD = require("services.hud")
+local SFX = require("services.sfx")
 
 local GameScene = {}
 
@@ -66,9 +67,13 @@ function GameScene.OnEnter(gs)
 end
 
 function GameScene.Update(gs)
+	-- Update all players
 	for _, p in ipairs(gs.players) do
 		Player.Update(p, gs.currentLevel)
 	end
+
+	-- Process player movement sounds
+	SFX.ProcessPlayers(gs.players)
 
 	HUD.Update(gs.hud)
 
