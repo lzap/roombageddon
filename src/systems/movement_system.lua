@@ -41,9 +41,10 @@ function MovementSystem.ProcessEntity(entity, currentLevel)
 
 			-- Check if we've reached the target
 			if entity.position == currentTarget then
-				-- Mark this position as visited
+				-- Mark this position as visited (use player component if available)
 				local targetGridPos = currentTarget // TILE_SIZE
-				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, movement.playerNumber)
+				local playerNumber = entity.player and entity.player.playerNumber or 1
+				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, playerNumber)
 
 				-- Remove completed target from queue
 				table.remove(movement.posQueue, 1)

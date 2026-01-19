@@ -1,5 +1,6 @@
 -- game scene --
 require("consts")
+require("common")
 
 local Player = require("entities.player")
 local Position = require("components.position")
@@ -25,7 +26,6 @@ function GameScene.New()
 	World.AddSystem(world, RenderSystem)
 	
 	return {
-		players = {},
 		currentLevel = 0,
 		hud = HUD.New(),
 		world = world,
@@ -39,15 +39,14 @@ function GameScene.LoadLevel(gs, level)
 	-- Store current level in world for systems to access
 	gs.world.currentLevel = clampedLevel
 
-	-- Clear existing players and world entities
-	gs.players = {}
 	-- Clear all entities from world
 	gs.world.entities = {}
 	gs.world.nextEntityId = 1
 
 	-- Create players at found positions
 	for _, posData in ipairs(playerPositions) do
-		local player = Player.New({
+		-- Player.New() now returns entity directly
+		local playerEntity = Player.New({
 			playerNumber = posData.playerNumber,
 			position = Position.New({
 				x = posData.x,
@@ -56,10 +55,9 @@ function GameScene.LoadLevel(gs, level)
 			direction = posData.direction,
 			currentLevel = clampedLevel,
 		})
-		table.insert(gs.players, player)
 		
 		-- Add player entity to world
-		World.AddEntity(gs.world, player.entity)
+		World.AddEntity(gs.world, playerEntity)
 
 		-- Mark starting position as visited
 		local startPos = Position.New({ x = posData.x, y = posData.y })
@@ -67,7 +65,9 @@ function GameScene.LoadLevel(gs, level)
 		Map.markVisited(clampedLevel, startGridPos.x, startGridPos.y, posData.playerNumber)
 	end
 
-	trace("Loaded level " .. clampedLevel .. " with " .. #gs.players .. " players")
+	-- Query world for player count
+	local players = World.Query(gs.world, {"player"})
+	trace("Loaded level " .. clampedLevel .. " with " .. #players .. " players")
 
 	-- Set level text if it exists
 	if LEVEL_TEXT[clampedLevel] then
@@ -97,24 +97,21 @@ function GameScene.Update(gs)
 	World.Update(gs.world)
 	
 	-- Update player entities' current level (for systems to access)
-	for _, p in ipairs(gs.players) do
-		if p.entity then
-			p.entity.currentLevel = gs.currentLevel
-		end
-		-- Legacy: still call Player.Update for any remaining logic
-		Player.Update(p, gs.currentLevel)
+	local players = World.Query(gs.world, {"player"})
+	for _, entity in ipairs(players) do
+		entity.currentLevel = gs.currentLevel
 	end
 
 	-- Process player movement sounds
-	SFX.ProcessPlayers(gs.players)
+	SFX.Process(gs.world)
 
 	HUD.Update(gs.hud)
 
 	-- Check if all players are stuck
 	local allStuck = true
-	if #gs.players > 0 then
-		for _, p in ipairs(gs.players) do
-			if not Player.IsStuck(p, gs.currentLevel) then
+	if #players > 0 then
+		for _, entity in ipairs(players) do
+			if not IsPlayerStuck(entity, gs.currentLevel) then
 				allStuck = false
 				break
 			end

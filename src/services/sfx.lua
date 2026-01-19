@@ -2,22 +2,30 @@
 require("consts")
 require("common")
 
-local Player = require("entities.player")
+local World = require("world")
 
 local SFX = {}
 
 -- Process player movement sounds
--- @param players Array of player objects
-function SFX.ProcessPlayers(players)
-	if all(players, function(p)
-		return Player.Sound(p) == SFX_NONE
+-- @param world World instance
+function SFX.Process(world)
+	-- Query entities with movement components
+	local entities = World.Query(world, {"movement"})
+	
+	if #entities == 0 then
+		return
+	end
+	
+	-- Check if all have no sound
+	if all(entities, function(e)
+		return e.movement.sfx == SFX_NONE
 	end) then
 		return
 	end
 
 	-- at least one player moved
-	local hasMoved = any(players, function(p)
-		return Player.Sound(p) == SFX_MOVED
+	local hasMoved = any(entities, function(e)
+		return e.movement.sfx == SFX_MOVED
 	end)
 
 	if hasMoved then
@@ -26,13 +34,20 @@ function SFX.ProcessPlayers(players)
 	end
 
 	-- at least one player bumped
-	local hasBumped = any(players, function(p)
-		return Player.Sound(p) == SFX_BUMPED
+	local hasBumped = any(entities, function(e)
+		return e.movement.sfx == SFX_BUMPED
 	end)
 
 	if hasBumped then
 		sfx(1, 48, 5, 0, 6)
 	end
+end
+
+-- Legacy function for backward compatibility (deprecated)
+-- @param players Array of player objects (deprecated)
+function SFX.ProcessPlayers(players)
+	-- This function is deprecated. Use SFX.Process(world) instead.
+	-- Kept for backward compatibility only.
 end
 
 return SFX

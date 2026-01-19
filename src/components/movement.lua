@@ -5,7 +5,6 @@ local Movement = {}
 function Movement.New(opts)
 	opts = opts or {}
 	return {
-		playerNumber = opts.playerNumber or 1, -- Player number for marking visited tiles
 		posQueue = opts.posQueue or {}, -- FIFO queue of target positions
 		moveTimer = opts.moveTimer or 0, -- Frames counter for pixel movement
 		sfx = opts.sfx or 0, -- Sound effect flag (SFX_NONE, SFX_MOVED, SFX_BUMPED)

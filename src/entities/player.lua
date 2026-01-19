@@ -1,4 +1,6 @@
--- player entity --
+-- player factory --
+-- Creates player entities with all necessary components
+
 require("consts")
 
 local Entity = require("entities.entity")
@@ -6,7 +8,7 @@ local Position = require("components.position")
 local Animation = require("components.animation")
 local Input = require("components.input")
 local Movement = require("components.movement")
-local Map = require("services.map")
+local PlayerComponent = require("components.player")
 
 local Player = {}
 
@@ -54,83 +56,34 @@ function Player.New(opts)
 		frameTime = 0,
 	})
 
+	-- Create player component
+	local player = PlayerComponent.New({
+		playerNumber = playerNumber,
+	})
+
 	-- Create input component
 	local input = Input.New({
-		playerNumber = playerNumber,
 		lastDirection = initialDirection,
 	})
 
 	-- Create movement component
 	local movement = Movement.New({
-		playerNumber = playerNumber,
 		posQueue = {},
 		moveTimer = 0,
 		sfx = SFX_NONE,
 	})
 
-	-- Create entity with player-specific components
-	local ent = Entity.New({
+	-- Create and return entity directly (no wrapper)
+	return Entity.New({
 		position = pos,
 		animation = animation,
 		input = input,
 		movement = movement,
+		player = player,
 		keyColor = opts.keyColor or 0,
 		rotate = initialRotation,
 		currentLevel = opts.currentLevel or 0,
 	})
-
-	return {
-		entity = ent,
-		playerNumber = playerNumber,
-		currentLevel = opts.currentLevel or 0,
-	}
-end
-
-function Player.Update(p, currentLevel)
-	-- Note: Input and Movement are now handled by InputSystem and MovementSystem via World.Update()
-	-- This function is kept for backward compatibility but does nothing
-	-- Update entity's current level
-	if p.entity then
-		p.entity.currentLevel = currentLevel
-	end
-end
-
-function Player.Sound(p)
-	if p.entity and p.entity.movement then
-		return p.entity.movement.sfx
-	end
-	return SFX_NONE
-end
-
-function Player.IsStuck(p, currentLevel)
-	if p.entity == nil or p.entity.movement == nil or p.entity.position == nil then
-		return false
-	end
-
-	-- Player is stuck if they're not moving and can't move in any direction
-	if #p.entity.movement.posQueue > 0 then
-		return false -- Player is currently moving
-	end
-
-	-- Get current grid position
-	local gridPos = p.entity.position // TILE_SIZE
-
-	-- Check if player can move in any direction
-	for direction = UP, RIGHT do
-		local dirData = DIRS[direction]
-		local targetGridPos = gridPos + dirData
-
-		if Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
-			return false -- Can move in at least one direction
-		end
-	end
-
-	-- Cannot move in any direction
-	return true
-end
-
-function Player.Draw(p)
-	Entity.Draw(p.entity)
 end
 
 return Player
