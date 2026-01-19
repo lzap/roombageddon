@@ -7,14 +7,22 @@ local Map = require("services.map")
 local SceneManager = require("scenes.scene_manager")
 local HUD = require("services.hud")
 local SFX = require("services.sfx")
+local World = require("world")
+local RenderSystem = require("systems.render_system")
 
 local GameScene = {}
 
 function GameScene.New()
+	local world = World.New()
+	
+	-- Register RenderSystem
+	World.AddSystem(world, RenderSystem)
+	
 	return {
 		players = {},
 		currentLevel = 0,
 		hud = HUD.New(),
+		world = world,
 	}
 end
 
@@ -22,8 +30,11 @@ function GameScene.LoadLevel(gs, level)
 	local playerPositions, clampedLevel = Map.loadLevel(level)
 	gs.currentLevel = clampedLevel
 
-	-- Clear existing players
+	-- Clear existing players and world entities
 	gs.players = {}
+	-- Clear all entities from world
+	gs.world.entities = {}
+	gs.world.nextEntityId = 1
 
 	-- Create players at found positions
 	for _, posData in ipairs(playerPositions) do
@@ -37,6 +48,9 @@ function GameScene.LoadLevel(gs, level)
 			currentLevel = clampedLevel,
 		})
 		table.insert(gs.players, player)
+		
+		-- Add player entity to world
+		World.AddEntity(gs.world, player.entity)
 
 		-- Mark starting position as visited
 		local startPos = Position.New({ x = posData.x, y = posData.y })
@@ -121,10 +135,8 @@ function GameScene.Draw(gs)
 	local mx, my = Map.getCoords(gs.currentLevel)
 	map(mx, my, MAP_WIDTH, MAP_HEIGHT, 0, 0)
 
-	-- Draw Entities
-	for _, p in ipairs(gs.players) do
-		Player.Draw(p)
-	end
+	-- Draw Entities using RenderSystem
+	World.Draw(gs.world)
 
 	-- Draw HUD
 	HUD.Draw(gs.hud)

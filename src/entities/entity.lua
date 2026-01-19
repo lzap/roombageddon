@@ -41,6 +41,8 @@ function Entity.Update(e)
 	end
 end
 
+-- Note: Entity.Draw() is deprecated. Use RenderSystem instead.
+-- Kept for backward compatibility, but RenderSystem should be used for new code.
 function Entity.Draw(e)
 	if e.curAnim == nil or e.anim[e.curAnim] == nil then
 		return
