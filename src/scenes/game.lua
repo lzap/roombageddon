@@ -9,13 +9,15 @@ local HUD = require("services.hud")
 local SFX = require("services.sfx")
 local World = require("world")
 local RenderSystem = require("systems.render_system")
+local AnimationSystem = require("systems.animation_system")
 
 local GameScene = {}
 
 function GameScene.New()
 	local world = World.New()
 	
-	-- Register RenderSystem
+	-- Register Systems
+	World.AddSystem(world, AnimationSystem)
 	World.AddSystem(world, RenderSystem)
 	
 	return {
@@ -81,6 +83,9 @@ function GameScene.OnEnter(gs)
 end
 
 function GameScene.Update(gs)
+	-- Update all systems (including AnimationSystem)
+	World.Update(gs.world)
+	
 	-- Update all players
 	for _, p in ipairs(gs.players) do
 		Player.Update(p, gs.currentLevel)

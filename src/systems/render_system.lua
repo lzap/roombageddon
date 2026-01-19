@@ -2,21 +2,22 @@
 -- Renders entities with position and animation components
 
 local World = require("world")
+local Animation = require("components.animation")
 
 local RenderSystem = {}
 
 -- Draw a single entity
--- @param entity Entity with position, anim, curAnim, frame, keyColor, rotate
+-- @param entity Entity with position and animation components
 function RenderSystem.DrawEntity(entity)
-	if entity.curAnim == nil or entity.anim == nil or entity.anim[entity.curAnim] == nil then
+	if entity.animation == nil or entity.position == nil then
 		return
 	end
 
-	if entity.position == nil then
+	local sprite = Animation.GetCurrentSprite(entity.animation)
+	if sprite == nil then
 		return
 	end
 
-	local sprite = entity.anim[entity.curAnim].frames[entity.frame]
 	local rotate = entity.rotate or 0
 	local keyColor = entity.keyColor or 0
 	spr(sprite, entity.position.x, entity.position.y, keyColor, 1, 0, rotate)
@@ -26,7 +27,7 @@ end
 -- @param world World instance
 function RenderSystem.Draw(world)
 	-- Query entities that have position and animation components
-	local entities = World.Query(world, {"position", "anim"})
+	local entities = World.Query(world, {"position", "animation"})
 	
 	for _, entity in ipairs(entities) do
 		RenderSystem.DrawEntity(entity)

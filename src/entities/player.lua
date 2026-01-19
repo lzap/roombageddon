@@ -3,6 +3,7 @@ require("consts")
 
 local Entity = require("entities.entity")
 local Position = require("components.position")
+local Animation = require("components.animation")
 local Map = require("services.map")
 
 local Player = {}
@@ -40,9 +41,8 @@ function Player.New(opts)
 	-- Convert direction to rotation
 	local initialRotation = directionToRotation(initialDirection)
 
-	-- Create entity with player-specific animation
-	local ent = Entity.New({
-		position = pos,
+	-- Create animation component
+	local animation = Animation.New({
 		anim = {
 			idle = {
 				frames = sprites,
@@ -52,6 +52,12 @@ function Player.New(opts)
 		curAnim = "idle",
 		frame = 1,
 		frameTime = 0,
+	})
+
+	-- Create entity with player-specific animation
+	local ent = Entity.New({
+		position = pos,
+		animation = animation,
 		keyColor = opts.keyColor or 0,
 		rotate = initialRotation,
 	})
@@ -68,7 +74,8 @@ function Player.New(opts)
 end
 
 function Player.Update(p, currentLevel)
-	Entity.Update(p.entity)
+	-- Note: Animation is now handled by AnimationSystem via World.Update()
+	-- Entity.Update() is deprecated
 
 	-- Reset SFX flag at start of update
 	p.sfx = SFX_NONE
