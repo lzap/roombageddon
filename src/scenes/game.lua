@@ -9,10 +9,10 @@ local SceneManager = require("scenes.scene_manager")
 local HUD = require("services.hud")
 local SFX = require("services.sfx")
 local World = require("world")
-local RenderSystem = require("systems.render_system")
-local AnimationSystem = require("systems.animation_system")
-local InputSystem = require("systems.input_system")
-local MovementSystem = require("systems.movement_system")
+local RenderSystem = require("systems.render")
+local AnimationSystem = require("systems.animation")
+local InputSystem = require("systems.input")
+local MovementSystem = require("systems.movement")
 
 local GameScene = {}
 
