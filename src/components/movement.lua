@@ -1,13 +1,13 @@
--- movement component --
-
 local MovementComponent = {}
 
+-- Create a new movement component
+-- @return Movement component
 function MovementComponent.New(opts)
 	opts = opts or {}
 	return {
-		posQueue = opts.posQueue or {}, -- FIFO queue of target positions
-		moveTimer = opts.moveTimer or 0, -- Frames counter for pixel movement
-		sfx = opts.sfx or 0, -- Sound effect flag (SFX_NONE, SFX_MOVED, SFX_BUMPED)
+		posQueue = opts.posQueue or {},
+		moveTimer = opts.moveTimer or 0,
+		sfx = opts.sfx or 0,
 	}
 end
 

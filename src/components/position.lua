@@ -1,11 +1,8 @@
--- position component --
 require("consts")
 
 local PositionComponent = {}
 
--- Metatable for Position objects with overloaded operators
 local positionMetatable = {
-	-- Addition: Position + Position or Position + {x, y}
 	__add = function(a, b)
 		if type(a) == "number" then
 			-- scalar + Position (not common, but handle it)
@@ -19,7 +16,6 @@ local positionMetatable = {
 		end
 	end,
 
-	-- Subtraction: Position - Position
 	__sub = function(a, b)
 		if type(b) == "number" then
 			-- Position - scalar
@@ -30,7 +26,6 @@ local positionMetatable = {
 		end
 	end,
 
-	-- Multiplication: Position * scalar or scalar * Position
 	__mul = function(a, b)
 		if type(a) == "number" then
 			-- scalar * Position
@@ -44,9 +39,9 @@ local positionMetatable = {
 		end
 	end,
 
-	-- Division: Position / scalar
 	__div = function(a, b)
 		if type(b) == "number" then
+			-- Position / scalar
 			return PositionComponent.New({ x = a.x / b, y = a.y / b })
 		else
 			-- Position / Position (component-wise division)
@@ -54,9 +49,9 @@ local positionMetatable = {
 		end
 	end,
 
-	-- Floor division: Position // scalar
 	__idiv = function(a, b)
 		if type(b) == "number" then
+			-- Position // scalar
 			return PositionComponent.New({ x = math.floor(a.x / b), y = math.floor(a.y / b) })
 		else
 			-- Position // Position (component-wise floor division)
@@ -64,17 +59,20 @@ local positionMetatable = {
 		end
 	end,
 
-	-- Unary minus: -Position
 	__unm = function(a)
 		return PositionComponent.New({ x = -a.x, y = -a.y })
 	end,
 
-	-- Equality: Position == Position
 	__eq = function(a, b)
 		return a.x == b.x and a.y == b.y
 	end,
 }
 
+-- Create a new position component
+-- @param opts Options table with:
+--   x: X coordinate (optional, default: 0)
+--   y: Y coordinate (optional, default: 0)
+-- @return Position component
 function PositionComponent.New(opts)
 	opts = opts or {}
 	local pos = {
@@ -85,6 +83,9 @@ function PositionComponent.New(opts)
 	return pos
 end
 
+-- Copy a position component
+-- @param pos Position component
+-- @return Copy of the position component
 function PositionComponent.Copy(pos)
 	return PositionComponent.New({
 		x = pos.x,
@@ -92,6 +93,11 @@ function PositionComponent.Copy(pos)
 	})
 end
 
+-- Move a position component to a direction
+-- @param pos Position component
+-- @param dir Direction to move to
+-- @param stepSize Step size (optional, default: TILE_SIZE)
+-- @return Position component
 function PositionComponent.MoveTo(pos, dir, stepSize)
 	if stepSize == nil then
 		stepSize = TILE_SIZE

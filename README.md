@@ -2,6 +2,13 @@
 
 A TIC-80 game by Lukáš `lzap` Zapletal & Ondra `ozap` Zapletal.
 
+### TODO
+
+* Sort levels
+* More levels
+* Auto level find instead of constant
+* Last "bonus" level (spawn 99 players)
+
 ## Requirements
 
 - TIC-80 PRO (consider buying the PRO version or sponsoring @nesbox)

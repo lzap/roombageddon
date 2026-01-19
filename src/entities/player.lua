@@ -12,8 +12,6 @@ local Player = {}
 
 function Player.New(opts)
 	opts = opts or {}
-	local playerNumber = opts.playerNumber or 1
-	local direction = opts.direction or RIGHT
 
 	return Entity.New({
 		position = opts.position or PositionComponent.New({
@@ -32,18 +30,12 @@ function Player.New(opts)
 			frameTime = 0,
 		}),
 		player = PlayerComponent.New({
-			playerNumber = playerNumber,
+			playerNumber = opts.playerNumber or 1,
 		}),
-		input = InputComponent.New({
-			lastDirection = direction,
-		}),
-		movement = MovementComponent.New({
-			posQueue = {},
-			moveTimer = 0,
-			sfx = SFX_NONE,
-		}),
+		input = InputComponent.New(),
+		movement = MovementComponent.New(),
 		keyColor = opts.keyColor or 0,
-		rotate = DirectionToRotation(direction),
+		rotate = DirectionToRotation(RIGHT),
 		currentLevel = opts.currentLevel or 0,
 	})
 end

@@ -1,12 +1,12 @@
--- input component --
-
 local InputComponent = {}
 
+-- Create a new input component
+-- @return Input component
 function InputComponent.New(opts)
 	opts = opts or {}
 	return {
-		lastDirection = opts.lastDirection or nil, -- Last direction moved
-		direction = opts.direction or nil, -- Current input direction (UP, DOWN, LEFT, RIGHT)
+		lastDirection = opts.lastDirection or nil,
+		direction = opts.direction or nil,
 	}
 end
 
