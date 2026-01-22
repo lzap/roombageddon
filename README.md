@@ -13,11 +13,11 @@ A TIC-80 game by Lukas `lzap` Zapletal & Ondra `ozap` Zapletal.
 
 ### TODO
 
-* Add obfuscator (I am almost at 64k now)
 * Two-hand mode (dpad + ABXY)
-* Auto level find instead of constant
-* Sort levels
-* More levels
+* More levels:
+ * 1-2P 0P
+ * 0P 1-2P
+ * 
 * Multiplayer (2 players each one hand)
 
 ## Requirements

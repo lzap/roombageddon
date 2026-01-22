@@ -44,6 +44,7 @@ function GameScene.LoadLevel(gs, level)
 	for _, posData in ipairs(playerPositions) do
 		local playerEntity = Player.New({
 			playerNumber = posData.playerNumber,
+			group = posData.group or GONE,
 			position = PositionComponent.New({
 				x = posData.x,
 				y = posData.y,
@@ -70,8 +71,19 @@ function GameScene.ChangeLevel(gs, level)
 	GameScene.LoadLevel(gs, level)
 end
 
+-- Load the next available level or switch to game over if none found
+-- startLevel: nil to find first level, or a level number to find next level
+function GameScene.LoadNextAvailableLevel(gs, startLevel)
+	local level = Map.getLevelToLoad(startLevel)
+	if level then
+		GameScene.LoadLevel(gs, level)
+	else
+		Director.Switch(G.Director, "game_over")
+	end
+end
+
 function GameScene.OnEnter(gs)
-	GameScene.LoadLevel(gs, 0)
+	GameScene.LoadNextAvailableLevel(gs, nil)
 end
 
 function GameScene.Update(gs)
@@ -102,20 +114,13 @@ function GameScene.Update(gs)
 		GameScene.LoadLevel(gs, gs.currentLevel)
 	end
 
-	if Map.isLevelComplete(gs.currentLevel) or (btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.RIGHT)) then
-		if gs.currentLevel >= LEVEL_COUNT - 1 then
-			Director.Switch(G.Director, "game_over")
-		else
-			GameScene.LoadLevel(gs, gs.currentLevel + 1)
+	if Map.isLevelComplete(gs.currentLevel) or keyp(16) then -- P key for next level
+		GameScene.LoadNextAvailableLevel(gs, gs.currentLevel)
+	elseif keyp(15) then -- O key for previous level
+		local previousLevel = Map.findPreviousLevel(gs.currentLevel)
+		if previousLevel then
+			GameScene.LoadLevel(gs, previousLevel)
 		end
-	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.LEFT) then
-		GameScene.LoadLevel(gs, gs.currentLevel - 1)
-	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.UP) then
-		local newLevel = gs.currentLevel - MAPS_PER_ROW
-		GameScene.LoadLevel(gs, newLevel)
-	elseif btn(BUTTONS.X) and btn(BUTTONS.Y) and btnp(BUTTONS.DOWN) then
-		local newLevel = gs.currentLevel + MAPS_PER_ROW
-		GameScene.LoadLevel(gs, newLevel)
 	end
 end
 

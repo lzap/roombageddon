@@ -1,6 +1,5 @@
 -- consts --
 
-LEVEL_COUNT = 13
 LEVEL_TEXT = {
 	[0] = "D-pad or arrows to move",
 	[1] = "All tiles must be cleaned",
@@ -53,10 +52,20 @@ MAPS_PER_ROW = 8
 MAP_WIDTH = 30
 MAP_HEIGHT = 17
 
-PLAYER_SPRITE_UP = 64
-PLAYER_SPRITE_DOWN = 80
-PLAYER_SPRITE_LEFT = 96
-PLAYER_SPRITE_RIGHT = 112
+PONE_SPR_UP = 64
+PONE_SPR_DOWN = 80
+PONE_SPR_LEFT = 96
+PONE_SPR_RIGHT = 112
+
+-- Group two player sprites
+PTWO_SPR_UP = 128
+PTWO_SPR_DOWN = 144
+PTWO_SPR_LEFT = 160
+PTWO_SPR_RIGHT = 176
+
+-- Player groups
+GONE = 1
+GTWO = 2
 
 MAX_LEVELS = MAPS_PER_ROW * MAPS_PER_ROW
 

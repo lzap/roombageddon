@@ -21,21 +21,41 @@ end
 
 -- Helper: Extract player info from sprite ID
 local function getPlayerInfoFromSprite(spriteId)
-	local spriteRanges = {
-		{ base = PLAYER_SPRITE_UP, direction = UP },
-		{ base = PLAYER_SPRITE_DOWN, direction = DOWN },
-		{ base = PLAYER_SPRITE_LEFT, direction = LEFT },
-		{ base = PLAYER_SPRITE_RIGHT, direction = RIGHT },
+	-- Group one sprites (64-67, 80-83, 96-99, 112-115)
+	local spriteRangesOne = {
+		{ base = PONE_SPR_UP, direction = UP },
+		{ base = PONE_SPR_DOWN, direction = DOWN },
+		{ base = PONE_SPR_LEFT, direction = LEFT },
+		{ base = PONE_SPR_RIGHT, direction = RIGHT },
 	}
 
-	for _, range in ipairs(spriteRanges) do
-		if spriteId >= range.base and spriteId <= range.base + 3 then
-			return {
-				playerNumber = spriteId - range.base + 1,
-				direction = range.direction,
-			}
+		for _, range in ipairs(spriteRangesOne) do
+			if spriteId >= range.base and spriteId <= range.base + 3 then
+				return {
+					playerNumber = spriteId - range.base + 1,
+					direction = range.direction,
+					group = GONE,
+				}
+			end
 		end
-	end
+
+		-- Group two sprites (128-131, 144-147, 160-163, 176-179)
+		local spriteRangesTwo = {
+			{ base = PTWO_SPR_UP, direction = UP },
+			{ base = PTWO_SPR_DOWN, direction = DOWN },
+			{ base = PTWO_SPR_LEFT, direction = LEFT },
+			{ base = PTWO_SPR_RIGHT, direction = RIGHT },
+		}
+
+		for _, range in ipairs(spriteRangesTwo) do
+			if spriteId >= range.base and spriteId <= range.base + 3 then
+				return {
+					playerNumber = spriteId - range.base + 1,
+					direction = range.direction,
+					group = GTWO,
+				}
+			end
+		end
 
 	return nil
 end
@@ -50,6 +70,7 @@ end
 
 -- Scan map for player position sprites and return their positions with direction
 -- Sprites: UP=64-67, DOWN=80-83, LEFT=96-99, RIGHT=112-115
+-- Group two: UP=128-131, DOWN=144-147, LEFT=160-163, RIGHT=176-179
 function Map.findPlayerPositions(level)
 	local mapX, mapY = Map.getCoords(level)
 	local positions = {}
@@ -63,6 +84,7 @@ function Map.findPlayerPositions(level)
 				table.insert(positions, {
 					playerNumber = playerInfo.playerNumber,
 					direction = playerInfo.direction,
+					group = playerInfo.group,
 					x = x * TILE_SIZE,
 					y = y * TILE_SIZE,
 				})
@@ -71,6 +93,109 @@ function Map.findPlayerPositions(level)
 	end
 
 	return positions
+end
+
+-- Replace player starting position sprites with sprite 0
+function Map.replacePlayerSprites(level)
+	local mapX, mapY = Map.getCoords(level)
+
+	for y = 0, MAP_HEIGHT - 1 do
+		for x = 0, MAP_WIDTH - 1 do
+			local spriteId = mget(mapX + x, mapY + y)
+			local playerInfo = getPlayerInfoFromSprite(spriteId)
+
+			if playerInfo then
+				-- Replace player sprite with sprite 0
+				mset(mapX + x, mapY + y, 0)
+			end
+		end
+	end
+end
+
+-- Check if a level has at least one player (is a valid level)
+-- Checks the original map state, not the current modified state
+function Map.hasPlayers(level)
+	level = clampLevel(level)
+
+	-- Ensure original map is cached
+	Map.storeOriginalMap(level)
+
+	-- Check the cached original map for player sprites
+	if not originalMapCache[level] then
+		return false
+	end
+
+	local mapX, mapY = Map.getCoords(level)
+	local tiles = originalMapCache[level]
+
+	for y = 0, MAP_HEIGHT - 1 do
+		for x = 0, MAP_WIDTH - 1 do
+			local spriteId = tiles[y * MAP_WIDTH + x]
+			local playerInfo = getPlayerInfoFromSprite(spriteId)
+			if playerInfo then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+-- Find the next valid level (with at least one player) starting from startLevel
+-- Returns the level number if found, nil if no more valid levels exist
+function Map.findNextLevel(startLevel)
+	-- Start from the next level after startLevel
+	local currentLevel = startLevel + 1
+
+	-- Check all remaining levels (don't wrap around)
+	while currentLevel < MAX_LEVELS do
+		if Map.hasPlayers(currentLevel) then
+			return currentLevel
+		end
+		currentLevel = currentLevel + 1
+	end
+
+	-- No valid level found
+	return nil
+end
+
+-- Find the previous valid level (with at least one player) starting from startLevel
+-- Returns the level number if found, nil if no previous valid levels exist
+function Map.findPreviousLevel(startLevel)
+	-- Start from the previous level before startLevel
+	local currentLevel = startLevel - 1
+
+	-- Check all previous levels (don't wrap around)
+	while currentLevel >= 0 do
+		if Map.hasPlayers(currentLevel) then
+			return currentLevel
+		end
+		currentLevel = currentLevel - 1
+	end
+
+	-- No valid level found
+	return nil
+end
+
+-- Find the first valid level starting from 0
+-- Returns the level number if found, nil if no valid levels exist
+function Map.findFirstLevel()
+	for level = 0, MAX_LEVELS - 1 do
+		if Map.hasPlayers(level) then
+			return level
+		end
+	end
+	return nil
+end
+
+-- Get the level to load: finds first level if startLevel is nil, otherwise finds next level
+-- Returns the level number if found, nil if no valid levels exist
+function Map.getLevelToLoad(startLevel)
+	if startLevel == nil then
+		return Map.findFirstLevel()
+	else
+		return Map.findNextLevel(startLevel)
+	end
 end
 
 -- Store original map state for a level
@@ -138,7 +263,10 @@ function Map.loadLevel(level)
 	-- Replace center markers (tiles with bit 2 set) with sprite 0
 	Map.replaceCenterMarkers(level)
 	-- Find player positions in the level
-	return Map.findPlayerPositions(level), level
+	local playerPositions = Map.findPlayerPositions(level)
+	-- Replace player starting position sprites with sprite 0
+	Map.replacePlayerSprites(level)
+	return playerPositions, level
 end
 
 -- Check if a tile is walkable (bit 0 must not be set)
