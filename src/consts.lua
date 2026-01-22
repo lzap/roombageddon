@@ -1,5 +1,5 @@
 -- Comment out for the release build
-FIRST_LEVEL = 9
+FIRST_LEVEL = 11
 
 LEVEL_TEXT = {
 	[0] = "D-pad or arrows to move",
