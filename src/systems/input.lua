@@ -83,7 +83,7 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 		-- Check if movement is valid
 		local targetGridPos = endGridPos + dirData
 		local targetPos = targetGridPos * TILE_SIZE
-		
+
 		-- Check for wall collision
 		if not Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			-- Bumped into wall
@@ -92,7 +92,7 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 			-- Check for player collision by querying all players
 			local players = World.Query(world, { "player", "position" })
 			local hasCollision = false
-			
+
 			for _, otherPlayer in ipairs(players) do
 				-- Skip self
 				if otherPlayer ~= entity then
@@ -112,7 +112,7 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 					end
 				end
 			end
-			
+
 			if hasCollision then
 				-- Bumped into another player
 				movement.sfx = SFX_BUMPED

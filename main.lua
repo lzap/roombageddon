@@ -7,6 +7,7 @@
 
 package.path = package.path .. ";./src/?.lua"
 
+require("consts")
 local Director = require("scenes.director")
 local IntroScene = require("scenes.intro")
 local GameScene = require("scenes.game")
@@ -40,7 +41,11 @@ function BOOT()
 		update = GameOverScene.Update,
 		draw = GameOverScene.Draw,
 	})
-	Director.Switch(G.Director, "intro")
+	if FIRST_LEVEL ~= nil then
+		Director.Switch(G.Director, "game")
+	else
+		Director.Switch(G.Director, "intro")
+	end
 end
 
 function TIC()
@@ -164,4 +169,3 @@ end
 -- <PALETTE>
 -- 000:1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57
 -- </PALETTE>
-

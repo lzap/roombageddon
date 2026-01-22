@@ -29,33 +29,33 @@ local function getPlayerInfoFromSprite(spriteId)
 		{ base = PONE_SPR_RIGHT, direction = RIGHT },
 	}
 
-		for _, range in ipairs(spriteRangesOne) do
-			if spriteId >= range.base and spriteId <= range.base + 3 then
-				return {
-					playerNumber = spriteId - range.base + 1,
-					direction = range.direction,
-					group = GONE,
-				}
-			end
+	for _, range in ipairs(spriteRangesOne) do
+		if spriteId >= range.base and spriteId <= range.base + 3 then
+			return {
+				playerNumber = spriteId - range.base + 1,
+				direction = range.direction,
+				group = GONE,
+			}
 		end
+	end
 
-		-- Group two sprites (128-131, 144-147, 160-163, 176-179)
-		local spriteRangesTwo = {
-			{ base = PTWO_SPR_UP, direction = UP },
-			{ base = PTWO_SPR_DOWN, direction = DOWN },
-			{ base = PTWO_SPR_LEFT, direction = LEFT },
-			{ base = PTWO_SPR_RIGHT, direction = RIGHT },
-		}
+	-- Group two sprites (128-131, 144-147, 160-163, 176-179)
+	local spriteRangesTwo = {
+		{ base = PTWO_SPR_UP, direction = UP },
+		{ base = PTWO_SPR_DOWN, direction = DOWN },
+		{ base = PTWO_SPR_LEFT, direction = LEFT },
+		{ base = PTWO_SPR_RIGHT, direction = RIGHT },
+	}
 
-		for _, range in ipairs(spriteRangesTwo) do
-			if spriteId >= range.base and spriteId <= range.base + 3 then
-				return {
-					playerNumber = spriteId - range.base + 1,
-					direction = range.direction,
-					group = GTWO,
-				}
-			end
+	for _, range in ipairs(spriteRangesTwo) do
+		if spriteId >= range.base and spriteId <= range.base + 3 then
+			return {
+				playerNumber = spriteId - range.base + 1,
+				direction = range.direction,
+				group = GTWO,
+			}
 		end
+	end
 
 	return nil
 end
@@ -177,9 +177,24 @@ function Map.findPreviousLevel(startLevel)
 	return nil
 end
 
--- Find the first valid level starting from 0
+-- Find the first valid level starting from 0, or from FIRST_LEVEL if set
 -- Returns the level number if found, nil if no valid levels exist
 function Map.findFirstLevel()
+	-- If FIRST_LEVEL is set, start from that level (convert from 1-indexed to 0-indexed)
+	if FIRST_LEVEL ~= nil then
+		local startLevel = FIRST_LEVEL - 1
+		startLevel = clampLevel(startLevel)
+
+		-- Check if the specified level has players
+		if Map.hasPlayers(startLevel) then
+			return startLevel
+		end
+
+		-- If the specified level doesn't have players, find the next available level from that point
+		return Map.findNextLevel(startLevel - 1)
+	end
+
+	-- If FIRST_LEVEL is not set, start from level 0
 	for level = 0, MAX_LEVELS - 1 do
 		if Map.hasPlayers(level) then
 			return level

@@ -1,4 +1,5 @@
--- consts --
+-- Comment out for the release build
+FIRST_LEVEL = 9
 
 LEVEL_TEXT = {
 	[0] = "D-pad or arrows to move",
