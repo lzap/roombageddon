@@ -2,6 +2,7 @@
 
 LUACC := luacc
 TIC80 ?= $(shell which tic80 || echo /Applications/tic80.app/Contents/MacOS/tic80)
+DARKLUA = darklua
 
 PLATFORM := html
 GAME_NAME := roombageddon
@@ -23,11 +24,12 @@ fmt:
 lint:
 	@./lint
 
-build: $(SOURCES)
+$(GAME_NAME).lua: $(SOURCES)
 	@mkdir -p $(BUILD_DIR)
 	@rm -f $(TIC)
 	$(LUACC) -o $(GAME_NAME).lua -p 6 -i ./ -i ./$(SRC_DIR) main $(TABLES)
-	$(TIC80) --skip --fs=. --cli --cmd="load $(GAME_NAME).lua & save $(TIC) & exit"
+
+build: $(TIC)
 
 export:
 	@mkdir -p $(EXPORT_DIR)

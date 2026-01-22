@@ -1,6 +1,6 @@
 # ROOMBAGEDDON
 
-A TIC-80 game by Lukáš `lzap` Zapletal & Ondra `ozap` Zapletal.
+A TIC-80 game by Lukas `lzap` Zapletal & Ondra `ozap` Zapletal.
 
 ### HOW TO PLAY
 
@@ -9,13 +9,16 @@ A TIC-80 game by Lukáš `lzap` Zapletal & Ondra `ozap` Zapletal.
 * You control multiple robots at once.
 * Solve all levels.
 * When you get stuck, press `(A)` or key `X` to reset the level
+* Rename to RUMBAPOCALYPSE and make music in Rumba style.
 
 ### TODO
 
+* Add obfuscator (I am almost at 64k now)
+* Two-hand mode (dpad + ABXY)
+* Auto level find instead of constant
 * Sort levels
 * More levels
-* Auto level find instead of constant
-* Last "bonus" level (spawn 99 players)
+* Multiplayer (2 players each one hand)
 
 ## Requirements
 
@@ -53,3 +56,4 @@ make fmt lint build
 
 - [@nesbox](https://github.com/nesbox): the [TIC-80](https://tic80.com/) creator.
 - [@luizdepra's template](https://github.com/luizdepra/tic80-lua-template): the project template.
+- [fancade](https://play.fancade.com/): the main game mechanic.
