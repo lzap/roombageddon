@@ -80,19 +80,6 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 		-- Update entity rotation
 		entity.rotate = DirectionToRotation(newDirection)
 
-		-- Update animation based on direction
-		if entity.animation then
-			local animName = "right"
-			if newDirection == UP then
-				animName = "up"
-			elseif newDirection == DOWN then
-				animName = "down"
-			elseif newDirection == LEFT then
-				animName = "left"
-			end
-			AnimationComponent.SetAnimation(entity.animation, animName)
-		end
-
 		-- Check if movement is valid
 		local targetGridPos = endGridPos + dirData
 		local targetPos = targetGridPos * TILE_SIZE

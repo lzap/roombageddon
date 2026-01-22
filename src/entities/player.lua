@@ -24,41 +24,14 @@ function Player.New(opts)
 	local animSprite1 = animSpriteBase
 	local animSprite2 = animSpriteBase + 1
 
-	-- Determine initial animation based on direction
-	local initialAnim = "right"
-	if direction == UP then
-		initialAnim = "up"
-	elseif direction == DOWN then
-		initialAnim = "down"
-	elseif direction == LEFT then
-		initialAnim = "left"
-	end
-
 	return Entity.New({
 		position = opts.position or PositionComponent.New({
 			x = SCREEN_WIDTH / 2 - TILE_SIZE,
 			y = SCREEN_HEIGHT / 2 - TILE_SIZE,
 		}),
 		animation = AnimationComponent.New({
-			anim = {
-				up = {
-					frames = { animSprite1, animSprite2 },
-					speed = 10,
-				},
-				down = {
-					frames = { animSprite1, animSprite2 },
-					speed = 10,
-				},
-				left = {
-					frames = { animSprite1, animSprite2 },
-					speed = 10,
-				},
-				right = {
-					frames = { animSprite1, animSprite2 },
-					speed = 10,
-				},
-			},
-			curAnim = initialAnim,
+			frames = { animSprite1, animSprite2 },
+			speed = 10,
 			frame = 1,
 			frameTime = 0,
 		}),

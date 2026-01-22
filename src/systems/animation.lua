@@ -14,14 +14,14 @@ function AnimationSystem.UpdateEntity(entity)
 	end
 
 	local anim = entity.animation
-	if anim.curAnim == nil or anim.anim == nil or anim.anim[anim.curAnim] == nil then
+	if anim.frames == nil or #anim.frames == 0 then
 		return
 	end
 
 	anim.frameTime = anim.frameTime + 1
-	if anim.frameTime >= anim.anim[anim.curAnim].speed then
+	if anim.frameTime >= anim.speed then
 		anim.frame = anim.frame + 1
-		if anim.frame > #anim.anim[anim.curAnim].frames then
+		if anim.frame > #anim.frames then
 			anim.frame = 1
 		end
 		anim.frameTime = 0
