@@ -1,5 +1,6 @@
 require("consts")
 local InputComponent = require("components.input")
+local World = require("world")
 
 local TXT = {}
 
@@ -71,6 +72,24 @@ function TXT.PrintMixed(y, elements, col)
 	end
 
 	return width
+end
+
+-- Get battery values as string for all players in both groups
+-- @param world World instance
+-- @return String like "0,0,1 2,4,2"
+function TXT.Batteries(world)
+	local players = World.Query(world, { "player", "battery" })
+	local g1, g2 = {}, {}
+	for _, e in ipairs(players) do
+		if e.player.group == GONE then
+			table.insert(g1, math.floor(e.battery.currentCapacity))
+		elseif e.player.group == GTWO then
+			table.insert(g2, math.floor(e.battery.currentCapacity))
+		end
+	end
+	local s1 = table.concat(g1, ",")
+	local s2 = table.concat(g2, ",")
+	return s1 .. " " .. s2
 end
 
 return TXT

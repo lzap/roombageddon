@@ -71,9 +71,8 @@ function GameScene.LoadLevel(gs, level)
 			end
 		end
 
-		-- If capacity is 0, set to 99999 to allow movement
 		if batteryCapacity == 0 then
-			batteryCapacity = 99999
+			batteryCapacity = 100
 		end
 
 		local playerEntity = Player.New({
@@ -172,7 +171,7 @@ function GameScene.Update(gs)
 
 	if Map.isLevelComplete(gs.currentLevel) or keyp(16) then -- P key for next level
 		-- Print movement buffer: auto solving not implemented
-		if Map.isLevelComplete(gs.currentLevel) and gs.world.movementBuffer ~= "" then
+		if Map.isLevelComplete(gs.currentLevel) and gs.world.movementBuffer ~= ""  and DEBUG then
 			trace(gs.world.movementBuffer)
 		end
 		GameScene.LoadNextAvailableLevel(gs, gs.currentLevel)
@@ -192,37 +191,40 @@ function GameScene.Draw(gs)
 
 	World.Draw(gs.world)
 
+	-- Debug: Print batteries at top of screen
+	if DEBUG then
+		local batteries = TXT.Batteries(gs.world)
+		print(batteries, 0, 0, COLORS.WHITE)
+	end
+
 	-- Draw battery indicators for each group
 	local totalCharge1, totalCapacity1 = GameScene.GetTotalBattery(gs, GONE)
 	local totalCharge2, totalCapacity2 = GameScene.GetTotalBattery(gs, GTWO)
 
-	-- Only render if both capacities are not above 99999
-	if not (totalCapacity1 > 99999 and totalCapacity2 > 99999) then
-		local textY = SCREEN_HEIGHT - 8
-		local spriteY = textY - 9 -- Sprite above the text with 1px gap
+	local textY = SCREEN_HEIGHT - 8
+	local spriteY = textY - 8 - 2
 
-		-- Group one (GONE) - bottom left
-		if totalCapacity1 > 0 and totalCapacity1 <= 99999 then
-			local percentage = math.floor((totalCharge1 / totalCapacity1) * 100)
-			local text = percentage .. "%"
-			local textWidth = print(text, -8, -8)
-			-- Center sprite relative to text (sprite is 8px wide)
-			local spriteX = (textWidth - 8) / 2
-			spr(258, spriteX, spriteY, 0, 1, 0, ROTATE_90) -- Facing down
-			print(text, 0, textY, COLORS.GREEN)
-		end
+	-- Group one (GONE) - bottom left
+	if totalCapacity1 > 0 then
+		local percentage = math.floor((totalCharge1 / totalCapacity1) * 100)
+		local text = percentage .. "%"
+		local textWidth = print(text, -8, -8)
+		-- Center sprite relative to text (sprite is 8px wide)
+		local spriteX = (textWidth - 8) / 2
+		spr(258, spriteX, spriteY, 0, 1, 0, ROTATE_90)
+		print(text, 0, textY, COLORS.GREEN)
+	end
 
-		-- Group two (GTWO) - bottom right
-		if totalCapacity2 > 0 and totalCapacity2 <= 99999 then
-			local percentage = math.floor((totalCharge2 / totalCapacity2) * 100)
-			local text = percentage .. "%"
-			local textWidth = print(text, -8, -8)
-			local textX = SCREEN_WIDTH - textWidth
-			-- Center sprite relative to text (sprite is 8px wide)
-			local spriteX = textX + (textWidth - 8) / 2
-			spr(274, spriteX, spriteY, 0, 1, 0, ROTATE_90) -- Facing down
-			print(text, textX, textY, COLORS.GREEN)
-		end
+	-- Group two (GTWO) - bottom right
+	if totalCapacity2 > 0 then
+		local percentage = math.floor((totalCharge2 / totalCapacity2) * 100)
+		local text = percentage .. "%"
+		local textWidth = print(text, -8, -8)
+		local textX = SCREEN_WIDTH - textWidth
+		-- Center sprite relative to text (sprite is 8px wide)
+		local spriteX = textX + (textWidth - 8) / 2
+		spr(274, spriteX, spriteY, 0, 1, 0, ROTATE_90)
+		print(text, textX, textY, COLORS.GREEN)
 	end
 
 	HUD.Draw(gs.hud)

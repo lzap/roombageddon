@@ -1,5 +1,6 @@
 -- Comment out for the release build
-FIRST_LEVEL = 16
+FIRST_LEVEL = 17
+--DEBUG = true
 
 SPR_UP = 480
 SPR_RIGHT = 481
@@ -54,6 +55,11 @@ LEVELS = {
 		Text = "BIG ROOM, SMALL BATTERIES",
 		BatOne = { 13, 2 },
 		BatTwo = { 4, 5 },
+	},
+	{
+		Text = "NOW THE REAL CHALLENGE",
+		BatOne = { 7, 8 },
+		BatTwo = { 3, 12 },
 	},
 }
 
