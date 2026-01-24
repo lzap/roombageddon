@@ -10,7 +10,7 @@ LEVEL_TEXT = {
 	[5] = "Clean all rooms",
 	[6] = "There is only one way",
 	[7] = "Do not get stuck",
-	[8] = "",
+	[8] = "ASDW or gamepad buttons for the red",
 	[9] = "",
 }
 
