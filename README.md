@@ -17,7 +17,6 @@ This one is a tad overengineered since it will be used for my talk at DevConf.
 
 ### TODO
 
-* Each robot has battery (limited amount of moves).
 * Add music, perhaps in Rumba style.
 
 ## Requirements for development

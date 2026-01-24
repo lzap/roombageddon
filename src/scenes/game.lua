@@ -124,34 +124,21 @@ function GameScene.OnEnter(gs)
 	GameScene.LoadNextAvailableLevel(gs, nil)
 end
 
--- Calculate total battery charge for a group
+-- Calculate total battery charge and capacity for a group
 -- @param world World instance
 -- @param group Group number (GONE or GTWO)
--- @return Total current capacity for the group
-function GameScene.GetTotalBatteryCharge(gs, group)
+-- @return Pair of (totalCharge, totalCapacity) for the group
+function GameScene.GetTotalBattery(gs, group)
 	local players = World.Query(gs.world, { "player", "battery" })
-	local total = 0
+	local totalCharge = 0
+	local totalCapacity = 0
 	for _, entity in ipairs(players) do
 		if entity.player and entity.player.group == group and entity.battery then
-			total = total + entity.battery.currentCapacity
+			totalCharge = totalCharge + entity.battery.currentCapacity
+			totalCapacity = totalCapacity + entity.battery.initialCapacity
 		end
 	end
-	return total
-end
-
--- Calculate total battery capacity for a group
--- @param world World instance
--- @param group Group number (GONE or GTWO)
--- @return Total initial capacity for the group
-function GameScene.GetTotalBatteryCapacity(gs, group)
-	local players = World.Query(gs.world, { "player", "battery" })
-	local total = 0
-	for _, entity in ipairs(players) do
-		if entity.player and entity.player.group == group and entity.battery then
-			total = total + entity.battery.initialCapacity
-		end
-	end
-	return total
+	return totalCharge, totalCapacity
 end
 
 function GameScene.Update(gs)
@@ -204,8 +191,8 @@ function GameScene.Draw(gs)
 	World.Draw(gs.world)
 
 	-- Draw battery indicators for each group
-	local totalCapacity1 = GameScene.GetTotalBatteryCapacity(gs, GONE)
-	local totalCapacity2 = GameScene.GetTotalBatteryCapacity(gs, GTWO)
+	local totalCharge1, totalCapacity1 = GameScene.GetTotalBattery(gs, GONE)
+	local totalCharge2, totalCapacity2 = GameScene.GetTotalBattery(gs, GTWO)
 
 	-- Only render if both capacities are not above 99999
 	if not (totalCapacity1 > 99999 and totalCapacity2 > 99999) then
@@ -214,7 +201,6 @@ function GameScene.Draw(gs)
 
 		-- Group one (GONE) - bottom left
 		if totalCapacity1 > 0 and totalCapacity1 <= 99999 then
-			local totalCharge1 = GameScene.GetTotalBatteryCharge(gs, GONE)
 			local percentage = math.floor((totalCharge1 / totalCapacity1) * 100)
 			local text = percentage .. "%"
 			local textWidth = print(text, -8, -8)
@@ -226,7 +212,6 @@ function GameScene.Draw(gs)
 
 		-- Group two (GTWO) - bottom right
 		if totalCapacity2 > 0 and totalCapacity2 <= 99999 then
-			local totalCharge2 = GameScene.GetTotalBatteryCharge(gs, GTWO)
 			local percentage = math.floor((totalCharge2 / totalCapacity2) * 100)
 			local text = percentage .. "%"
 			local textWidth = print(text, -8, -8)

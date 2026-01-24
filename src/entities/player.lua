@@ -17,14 +17,6 @@ function Player.New(opts)
 	local playerNumber = opts.playerNumber or 1
 	local direction = opts.direction or RIGHT
 
-	-- Use animated sprites: 256-257 for group one, 272-273 for group two
-	local animSpriteBase = 256
-	if group == GTWO then
-		animSpriteBase = 272
-	end
-	local animSprite1 = animSpriteBase
-	local animSprite2 = animSpriteBase + 1
-
 	local entity = {
 		size = SizeComponent.New({
 			width = TILE_SIZE,
@@ -35,8 +27,17 @@ function Player.New(opts)
 			y = SCREEN_HEIGHT / 2 - TILE_SIZE,
 		}),
 		animation = AnimationComponent.New({
-			frames = { animSprite1, animSprite2 },
-			speed = 10,
+			frames = {
+				[GONE] = { 256, 257 },   -- Group one
+				[GTWO] = { 272, 273 },   -- Group two
+				[GDEAD] = { 288, 289 },  -- Dead battery
+			},
+			speeds = {
+				[GONE] = 10,
+				[GTWO] = 10,
+				[GDEAD] = 120,
+			},
+			frameGroup = group,
 			frame = 1,
 			frameTime = 0,
 		}),

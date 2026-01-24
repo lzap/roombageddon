@@ -2,11 +2,9 @@ require("consts")
 
 local InputComponent = {}
 
--- Gamepad flag: true if using gamepad, false if using keyboard
-InputComponent.Gamepad = true -- default to gamepad
+-- Gamepad flag is heuristically set to false during intro scene
+InputComponent.Gamepad = false
 
--- Create a new input component
--- @return Input component
 function InputComponent.New(opts)
 	opts = opts or {}
 	return {
@@ -15,8 +13,6 @@ function InputComponent.New(opts)
 	}
 end
 
--- Clear current input direction
--- @param input Input component
 function InputComponent.Clear(input)
 	input.direction = nil
 end

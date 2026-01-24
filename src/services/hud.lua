@@ -39,7 +39,6 @@ function HUD.Draw(hud)
 
 	local color = COLORS.WHITE
 	if hud.blink then
-		-- Blink between yellow and white, 2x faster (15 frames instead of 30)
 		local blinkState = math.floor(hud.blinkTimer / 15) % 2
 		if blinkState == 0 then
 			color = COLORS.YELLOW
