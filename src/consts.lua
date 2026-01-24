@@ -1,5 +1,5 @@
 -- Comment out for the release build
-FIRST_LEVEL = 17
+--FIRST_LEVEL = 17
 --DEBUG = true
 
 SPR_UP = 480
@@ -36,14 +36,16 @@ LEVELS = {
 		-- "1>1>1^1>1>1<1<1v1<1<
 	},
 	{ Text = "THE FIRST CHALLENGE" },
-	{ Text = { "MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D } },
-	{ Text = "BATTERY IS LIMITED", BatOne = { 18, 18 }, BatTwo = { 18, 18 } },
-	{ Text = "BATTERIES ARE LIMITED", BatOne = { 6, 7 }, BatTwo = { 6, 7 } },
-	{ Text = "UNLIMITED BATTERY FOR THIS ONE" },
 	{
-		Text = "YOU KNOW WHAT...",
-		BatOne = { 9, 11 },
-		BatTwo = { 5, 9 },
+		Text = { "MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D },
+		BatOne = { 8 }, BatTwo = { 10 },
+	},
+	{ Text = "DO NOT WASTE ENERGY", BatOne = { 18, 18 }, BatTwo = { 18, 18 } },
+	{ Text = "BATTERIES ARE SMALL", BatOne = { 6, 7 }, BatTwo = { 6, 7 } },
+	{ Text = "FULLY CHARGED LEVEL" },
+	{
+		Text = "BUT THE NEXT DAY...",
+		BatOne = { 9, 11 }, BatTwo = { 5, 9 },
 		-- 1<1v1<1^1^1<1v1<1^1^1<1>1v1v1>1^1>1v1>1^2v2>2v2<2<2v2^2>2^2<2^2^2>2^
 	},
 	{
@@ -53,13 +55,11 @@ LEVELS = {
 	{ Text = "SOLVE THE LOOPS" },
 	{
 		Text = "BIG ROOM, SMALL BATTERIES",
-		BatOne = { 13, 2 },
-		BatTwo = { 4, 5 },
+		BatOne = { 13, 2 }, BatTwo = { 4, 5 },
 	},
 	{
 		Text = "NOW THE REAL CHALLENGE",
-		BatOne = { 7, 8 },
-		BatTwo = { 3, 12 },
+		BatOne = { 7, 8 }, BatTwo = { 3, 12 },
 	},
 }
 
