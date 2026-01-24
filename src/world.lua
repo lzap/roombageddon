@@ -7,6 +7,7 @@ function World.New()
 		entities = {},
 		systems = {},
 		nextEntityId = 1,
+		movementBuffer = "",
 	}
 end
 

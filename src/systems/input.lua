@@ -131,6 +131,11 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 				-- Queue valid movement
 				MovementComponent.QueuePosition(movement, targetPos)
 				movement.sfx = SFX_MOVED
+				
+				-- Append to movement buffer
+				local groupPrefix = (group == GONE) and "1" or "2"
+				local directionChar = DIRECTION_CHARS[newDirection] or ""
+				world.movementBuffer = world.movementBuffer .. groupPrefix .. directionChar
 			end
 		end
 	else

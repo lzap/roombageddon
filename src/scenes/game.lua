@@ -42,6 +42,7 @@ function GameScene.LoadLevel(gs, level)
 
 	gs.world.entities = {}
 	gs.world.nextEntityId = 1
+	gs.world.movementBuffer = ""
 
 	-- Get battery configuration for this level
 	local levelData = LEVELS[clampedLevel + 1]
@@ -181,6 +182,10 @@ function GameScene.Update(gs)
 	end
 
 	if Map.isLevelComplete(gs.currentLevel) or keyp(16) then -- P key for next level
+		-- Print movement buffer: auto solving not implemented
+		if Map.isLevelComplete(gs.currentLevel) and gs.world.movementBuffer ~= "" then
+			trace(gs.world.movementBuffer)
+		end
 		GameScene.LoadNextAvailableLevel(gs, gs.currentLevel)
 	elseif keyp(15) then -- O key for previous level
 		local previousLevel = Map.findPreviousLevel(gs.currentLevel)

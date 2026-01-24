@@ -30,13 +30,21 @@ LEVELS = {
 	{ Text = "NO WAY BACK" },
 	{ Text = "MOVE THEM BOTH" },
 	{ Text = "WALLS CAN HELP" },
-	{ Text = "USE WALLS WISELY" },
+	{
+		Text = "USE WALLS WISELY",
+		Solution = "1>1>1^1>1>1<1<1v1<1<",
+	},
 	{ Text = "THE FIRST CHALLENGE" },
 	{ Text = { "MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D } },
 	{ Text = "BATTERY IS LIMITED", BatOne = { 18, 18 }, BatTwo = { 18, 18 } },
 	{ Text = "BATTERIES ARE LIMITED", BatOne = { 6, 7 }, BatTwo = { 6, 7 } },
 	{ Text = "UNLIMITED BATTERY FOR THIS ONE" },
-	{ Text = "YOU KNOW WHAT...", BatOne = { 9, 11 }, BatTwo = { 5, 9 } },
+	{
+		Text = "YOU KNOW WHAT...",
+		BatOne = { 9, 11 },
+		BatTwo = { 5, 9 },
+		Solution = "1<1v1<1^1^1<1v1<1^1^1<1>1v1v1>1^1>1v1>1^2v2>2v2<2<2v2^2>2^2<2^2^2>2^",
+	},
 }
 
 local BLACK = 0
@@ -126,6 +134,13 @@ DIRS = {
 		x = 0,
 		y = 0,
 	},
+}
+
+DIRECTION_CHARS = {
+	[LEFT] = "<",
+	[RIGHT] = ">",
+	[UP] = "^",
+	[DOWN] = "v",
 }
 
 ROTATE_NONE = 0
