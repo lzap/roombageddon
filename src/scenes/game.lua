@@ -155,11 +155,13 @@ function GameScene.Update(gs)
 
 	local allStuck = #players > 0
 		and All(players, function(entity)
-			return Map.isPlayerStuck(entity, gs.currentLevel)
+			local isStuck = Map.isPlayerStuck(entity, gs.currentLevel)
+			local hasDeadBattery = entity.battery and entity.battery.currentCapacity <= 0
+			return isStuck or hasDeadBattery
 		end)
 
 	if allStuck then
-		HUD.SetText(gs.hud, { "YOU SUCK, YOU'RE STUCK!", SPR_Z, "OR", SPR_X, "TO RESET" })
+		HUD.SetText(gs.hud, { "YOU SUCK, YOU'RE STUCK! PRESS", SPR_Z, "OR", SPR_X })
 		HUD.Blink(gs.hud, true)
 	end
 

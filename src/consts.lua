@@ -1,5 +1,5 @@
 -- Comment out for the release build
-FIRST_LEVEL = 12
+FIRST_LEVEL = 16
 
 SPR_UP = 480
 SPR_RIGHT = 481
@@ -32,7 +32,7 @@ LEVELS = {
 	{ Text = "WALLS CAN HELP" },
 	{
 		Text = "USE WALLS WISELY",
-		Solution = "1>1>1^1>1>1<1<1v1<1<",
+		-- "1>1>1^1>1>1<1<1v1<1<
 	},
 	{ Text = "THE FIRST CHALLENGE" },
 	{ Text = { "MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D } },
@@ -41,11 +41,18 @@ LEVELS = {
 	{ Text = "UNLIMITED BATTERY FOR THIS ONE" },
 	{
 		Text = "YOU KNOW WHAT...",
-		BatOne = { 9, 11 },
-		BatTwo = { 5, 9 },
-		Solution = "1<1v1<1^1^1<1v1<1^1^1<1>1v1v1>1^1>1v1>1^2v2>2v2<2<2v2^2>2^2<2^2^2>2^",
+		BatOne = { 9, 11 }, BatTwo = { 5, 9 },
+		-- 1<1v1<1^1^1<1v1<1^1^1<1>1v1v1>1^1>1v1>1^2v2>2v2<2<2v2^2>2^2<2^2^2>2^
 	},
-}
+	{
+		Text = "NICE WORK, EASY NOW",
+		-- 2v2v2v2>2>2^2>2>2>2>2v2<2<2v2v2>2^2^2<2^2^2>2>2>2^2^1v1v1v1>1>1^1^1<1<1^1^1<1v1<1^1<1v1v
+	 },
+	 {Text = "SOLVE THE LOOPS"},
+	 {
+		Text = "BIG ROOM, SMALL BATTERIES",
+		BatOne = { 13, 2 }, BatTwo = { 4, 5 },
+	 },}
 
 local BLACK = 0
 local PURPLE = 1
