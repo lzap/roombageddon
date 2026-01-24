@@ -41,18 +41,21 @@ LEVELS = {
 	{ Text = "UNLIMITED BATTERY FOR THIS ONE" },
 	{
 		Text = "YOU KNOW WHAT...",
-		BatOne = { 9, 11 }, BatTwo = { 5, 9 },
+		BatOne = { 9, 11 },
+		BatTwo = { 5, 9 },
 		-- 1<1v1<1^1^1<1v1<1^1^1<1>1v1v1>1^1>1v1>1^2v2>2v2<2<2v2^2>2^2<2^2^2>2^
 	},
 	{
 		Text = "NICE WORK, EASY NOW",
 		-- 2v2v2v2>2>2^2>2>2>2>2v2<2<2v2v2>2^2^2<2^2^2>2>2>2^2^1v1v1v1>1>1^1^1<1<1^1^1<1v1<1^1<1v1v
-	 },
-	 {Text = "SOLVE THE LOOPS"},
-	 {
+	},
+	{ Text = "SOLVE THE LOOPS" },
+	{
 		Text = "BIG ROOM, SMALL BATTERIES",
-		BatOne = { 13, 2 }, BatTwo = { 4, 5 },
-	 },}
+		BatOne = { 13, 2 },
+		BatTwo = { 4, 5 },
+	},
+}
 
 local BLACK = 0
 local PURPLE = 1

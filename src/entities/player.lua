@@ -28,9 +28,9 @@ function Player.New(opts)
 		}),
 		animation = AnimationComponent.New({
 			frames = {
-				[GONE] = { 256, 257 },   -- Group one
-				[GTWO] = { 272, 273 },   -- Group two
-				[GDEAD] = { 288, 289 },  -- Dead battery
+				[GONE] = { 256, 257 }, -- Group one
+				[GTWO] = { 272, 273 }, -- Group two
+				[GDEAD] = { 288, 289 }, -- Dead battery
 			},
 			speeds = {
 				[GONE] = 10,

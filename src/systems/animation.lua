@@ -31,7 +31,7 @@ function AnimationSystem.UpdateEntity(entity)
 		else
 			-- Battery is available - use normal animation based on group
 			local targetGroup = entity.player.group
-			
+
 			if targetGroup and anim.frameGroup ~= targetGroup then
 				anim.frameGroup = targetGroup
 				anim.frame = 1
