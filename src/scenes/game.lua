@@ -13,6 +13,7 @@ local AnimationSystem = require("systems.animation")
 local InputSystem = require("systems.input")
 local MovementSystem = require("systems.movement")
 local InputComponent = require("components.input")
+local TXT = require("services.txt")
 
 local GameScene = {}
 
@@ -104,12 +105,11 @@ function GameScene.Update(gs)
 		end)
 
 	if allStuck then
-		local buttonText = InputComponent.ButtonText(BUTTONS.B)
-		HUD.SetText(gs.hud, "You suck, you're STUCK! Press " .. buttonText .. ".")
+		HUD.SetText(gs.hud, {"YOU SUCK, YOU'RE STUCK!", SPR_Z, "OR", SPR_X, "TO RESET"})
 		HUD.Blink(gs.hud, true)
 	end
 
-	if btnp(BUTTONS.B) then
+	if btnp(BUTTONS.A) or btnp(BUTTONS.B) then
 		Map.restoreOriginalMap(gs.currentLevel)
 		GameScene.LoadLevel(gs, gs.currentLevel)
 	end

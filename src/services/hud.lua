@@ -1,4 +1,5 @@
 require("consts")
+local TXT = require("services.txt")
 
 local HUD = {}
 
@@ -47,11 +48,8 @@ function HUD.Draw(hud)
 		end
 	end
 
-	local textWidth = print(hud.text, -8, -8)
-	local x = (SCREEN_WIDTH - textWidth) / 2
 	local y = SCREEN_HEIGHT - 8
-
-	print(hud.text, x, y, color)
+	TXT.PrintMixed(y, hud.text, color)
 end
 
 return HUD

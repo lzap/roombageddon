@@ -1,17 +1,39 @@
 -- Comment out for the release build
-FIRST_LEVEL = 12
+--FIRST_LEVEL = 12
+
+SPR_UP = 480
+SPR_RIGHT = 481
+SPR_DOWN = 482
+SPR_LEFT = 483
+SPR_A = 484
+SPR_S = 485
+SPR_D = 486
+SPR_W = 487
+SPR_Z = 488
+SPR_X = 489
+
+SPRK_UP = 496
+SPRK_RIGHT = 497
+SPRK_DOWN = 498
+SPRK_LEFT = 499
+SPRK_A = 500
+SPRK_S = 501
+SPRK_D = 502
+SPRK_W = 503
+SPRK_Z = 504
+SPRK_X = 505
 
 LEVEL_TEXT = {
-	[0] = "D-pad or arrows to move",
-	[1] = "All tiles must be cleaned",
-	[2] = "Cleaning is single-pass only",
-	[3] = "No backtracking allowed",
-	[4] = "You move them all",
-	[5] = "Clean all rooms",
-	[6] = "There is only one way",
-	[7] = "Do not get stuck",
-	[8] = "ASDW or gamepad buttons for the red",
-	[9] = "",
+	[0] = {"USE", SPR_UP, SPR_RIGHT, SPR_DOWN, SPR_LEFT, "TO MOVE"},
+	[1] = {"CLEAN ALL FLOOR, RESET WITH", SPR_Z, "OR", SPR_X},
+	[2] = "CANNOT CROSS CLEANED FLOOR",
+	[3] = "NO WAY BACK",
+	[4] = "MOVE THEM BOTH",
+	[5] = "WALLS CAN HELP",
+	[6] = "USE WALLS WISELY",
+	[7] = "THE FIRST CHALLENGE",
+	[8] = {"MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D},
+	[9] = "BATTERY IS LIMITED",
 }
 
 local BLACK = 0
