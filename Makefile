@@ -39,7 +39,7 @@ $(TIC_FILE): $(LUA_FILE)
 
 build: $(TIC_FILE)
 
-export: $(TIC_FILE)
+export:
 	@mkdir -p $(EXPORT_DIR)
 	$(TIC80) --skip --fs=. --cli --cmd="load $(TIC_FILE) & export html $(EXPORT_DIR)/$(GAME_NAME) & exit"
 
