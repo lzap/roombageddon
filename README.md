@@ -2,25 +2,24 @@
 
 A TIC-80 game by Lukas `lzap` Zapletal & Ondra `ozap` Zapletal.
 
+This one is a tad overengineered since it will be used for my talk at DevConf.
+
 ### HOW TO PLAY
 
-* Use D-Pad or keyboard arrows to move the robot.
-* Robot cleans the floor but will not enter already cleaned tiles.
+* Use D-Pad on gamepad or keyboard arrows to move the robot one.
+* Use ABXY gamepad buttons or ASDW keys to move the robot two.
+* Robots clean the floor but will not enter already cleaned tiles.
 * You control multiple robots at once.
 * Solve all levels.
 * When you get stuck, press `(A)` or key `X` to reset the level
-* Rename to RUMBAPOCALYPSE and make music in Rumba style.
+
+[Play ROOMBAGEDDON in your browser!](https://lukas.zapletalovi.com/roombageddon/)
 
 ### TODO
 
-* Two-hand mode (dpad + ABXY)
-* More levels:
- * 1-2P 0P
- * 0P 1-2P
- * 
-* Multiplayer (2 players each one hand)
+* Add music, perhaps in Rumba style.
 
-## Requirements
+## Requirements for development
 
 - TIC-80 PRO (consider buying the PRO version or sponsoring @nesbox)
 - Linux or MacOS (it probably works on Windows with MinGW or WSL)

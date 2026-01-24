@@ -1,7 +1,7 @@
 require("consts")
 require("common")
 
-local Entity = require("entities.entity")
+local SizeComponent = require("components.size")
 local PositionComponent = require("components.position")
 local AnimationComponent = require("components.animation")
 local InputComponent = require("components.input")
@@ -24,7 +24,11 @@ function Player.New(opts)
 	local animSprite1 = animSpriteBase
 	local animSprite2 = animSpriteBase + 1
 
-	return Entity.New({
+	local entity = {
+		size = SizeComponent.New({
+			width = TILE_SIZE,
+			height = TILE_SIZE,
+		}),
 		position = opts.position or PositionComponent.New({
 			x = SCREEN_WIDTH / 2 - TILE_SIZE,
 			y = SCREEN_HEIGHT / 2 - TILE_SIZE,
@@ -35,6 +39,8 @@ function Player.New(opts)
 			frame = 1,
 			frameTime = 0,
 		}),
+		keyColor = opts.keyColor or 0,
+		rotate = DirectionToRotation(direction),
 		player = PlayerComponent.New({
 			playerNumber = playerNumber,
 			group = group,
@@ -44,10 +50,16 @@ function Player.New(opts)
 			lastDirection = direction,
 		}),
 		movement = MovementComponent.New(),
-		keyColor = opts.keyColor or 0,
-		rotate = DirectionToRotation(direction),
 		currentLevel = opts.currentLevel or 0,
-	})
+	}
+
+	for key, value in pairs(opts) do
+		if entity[key] == nil then
+			entity[key] = value
+		end
+	end
+
+	return entity
 end
 
 return Player
