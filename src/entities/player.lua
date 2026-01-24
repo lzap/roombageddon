@@ -7,6 +7,7 @@ local AnimationComponent = require("components.animation")
 local InputComponent = require("components.input")
 local MovementComponent = require("components.movement")
 local PlayerComponent = require("components.player")
+local BatteryComponent = require("components.battery")
 
 local Player = {}
 
@@ -50,6 +51,7 @@ function Player.New(opts)
 			lastDirection = direction,
 		}),
 		movement = MovementComponent.New(),
+		battery = opts.battery or BatteryComponent.New(),
 		currentLevel = opts.currentLevel or 0,
 	}
 

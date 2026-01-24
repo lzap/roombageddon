@@ -1,5 +1,5 @@
 -- Comment out for the release build
---FIRST_LEVEL = 12
+FIRST_LEVEL = 12
 
 SPR_UP = 480
 SPR_RIGHT = 481
@@ -23,17 +23,20 @@ SPRK_W = 503
 SPRK_Z = 504
 SPRK_X = 505
 
-LEVEL_TEXT = {
-	[0] = {"USE", SPR_UP, SPR_RIGHT, SPR_DOWN, SPR_LEFT, "TO MOVE"},
-	[1] = {"CLEAN ALL FLOOR, RESET WITH", SPR_Z, "OR", SPR_X},
-	[2] = "CANNOT CROSS CLEANED FLOOR",
-	[3] = "NO WAY BACK",
-	[4] = "MOVE THEM BOTH",
-	[5] = "WALLS CAN HELP",
-	[6] = "USE WALLS WISELY",
-	[7] = "THE FIRST CHALLENGE",
-	[8] = {"MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D},
-	[9] = "BATTERY IS LIMITED",
+LEVELS = {
+	{ Text = { "USE", SPR_UP, SPR_RIGHT, SPR_DOWN, SPR_LEFT, "TO MOVE" } },
+	{ Text = { "CLEAN ALL FLOOR, RESET WITH", SPR_Z, "OR", SPR_X } },
+	{ Text = "CANNOT CROSS CLEANED FLOOR" },
+	{ Text = "NO WAY BACK" },
+	{ Text = "MOVE THEM BOTH" },
+	{ Text = "WALLS CAN HELP" },
+	{ Text = "USE WALLS WISELY" },
+	{ Text = "THE FIRST CHALLENGE" },
+	{ Text = { "MOVE THE BLUE ONE WITH", SPR_W, SPR_A, SPR_S, SPR_D } },
+	{ Text = "BATTERY IS LIMITED", BatOne = { 18, 18 }, BatTwo = { 18, 18 } },
+	{ Text = "BATTERIES ARE LIMITED", BatOne = { 6, 7 }, BatTwo = { 6, 7 } },
+	{ Text = "UNLIMITED BATTERY FOR THIS ONE" },
+	{ Text = "YOU KNOW WHAT...", BatOne = { 9, 11 }, BatTwo = { 5, 9 } },
 }
 
 local BLACK = 0

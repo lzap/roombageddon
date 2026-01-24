@@ -46,6 +46,11 @@ function MovementSystem.ProcessEntity(entity, currentLevel)
 				local playerNumber = entity.player and entity.player.playerNumber or 1
 				Map.markVisited(currentLevel, targetGridPos.x, targetGridPos.y, playerNumber)
 
+				-- Consume battery if available
+				if entity.battery and entity.battery.currentCapacity > 0 then
+					entity.battery.currentCapacity = entity.battery.currentCapacity - 1
+				end
+
 				-- Remove completed target from queue
 				table.remove(movement.posQueue, 1)
 			end

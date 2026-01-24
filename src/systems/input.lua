@@ -84,9 +84,20 @@ function InputSystem.ProcessEntity(entity, currentLevel, world)
 		local targetGridPos = endGridPos + dirData
 		local targetPos = targetGridPos * TILE_SIZE
 
+		-- Check for battery - if current capacity is 0, cannot move
+		local hasBattery = true
+		if entity.battery then
+			if entity.battery.currentCapacity <= 0 then
+				hasBattery = false
+			end
+		end
+
 		-- Check for wall collision
 		if not Map.canMoveTo(currentLevel, targetGridPos.x, targetGridPos.y) then
 			-- Bumped into wall
+			movement.sfx = SFX_BUMPED
+		elseif not hasBattery then
+			-- Out of battery - cannot move
 			movement.sfx = SFX_BUMPED
 		else
 			-- Check for player collision by querying all players

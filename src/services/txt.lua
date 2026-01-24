@@ -47,10 +47,10 @@ function TXT.PrintMixed(y, elements, col)
 			end
 		end
 	end
-	
+
 	-- Calculate centered x position
 	local x = (SCREEN_WIDTH - width) / 2
-	
+
 	-- Render the content
 	if type(elements) == "string" then
 		print(elements, x, y, col or 15)
@@ -69,7 +69,7 @@ function TXT.PrintMixed(y, elements, col)
 			end
 		end
 	end
-	
+
 	return width
 end
 
