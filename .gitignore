@@ -2,6 +2,8 @@
 /export
 /roombageddon.lua
 /roombageddon.tic
+/build/roombageddon.lua
+/build/roombageddon.tic
 .local/
 *.gif
 *.png
